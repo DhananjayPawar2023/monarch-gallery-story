@@ -11,6 +11,7 @@ import Artists from "./pages/Artists";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import ArtworkDetail from "./pages/ArtworkDetail";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/collections" element={<Collections />} />
+              <Route path="/artwork/:id" element={<ArtworkDetail />} />
               <Route path="/artists" element={<Artists />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />

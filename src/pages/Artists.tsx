@@ -1,35 +1,6 @@
-import artist1 from "@/assets/artist-1.jpg";
-import artist2 from "@/assets/artist-2.jpg";
-import artist3 from "@/assets/artist-3.jpg";
+import { artists } from "@/data/artists";
 
 const Artists = () => {
-  const artists = [
-    {
-      id: 1,
-      image: artist1,
-      name: "Elena Voss",
-      location: "Berlin, Germany",
-      bio: "Elena Voss explores the intersection of geometry and emotion in her digital works. Her practice combines architectural precision with intuitive color theory, creating pieces that resonate with both collectors and critics alike.",
-      specialization: "Geometric Abstraction",
-    },
-    {
-      id: 2,
-      image: artist2,
-      name: "Marcus Chen",
-      location: "Tokyo, Japan",
-      bio: "Working at the forefront of generative art, Marcus Chen crafts ethereal digital sculptures that challenge our perception of form and space. His work has been exhibited in galleries across Asia and Europe.",
-      specialization: "Generative Art",
-    },
-    {
-      id: 3,
-      image: artist3,
-      name: "Sofia Laurent",
-      location: "Paris, France",
-      bio: "Sofia Laurent's minimalist approach to digital art draws inspiration from architectural forms and natural light. Her work is characterized by its refined simplicity and emotional depth.",
-      specialization: "Minimal Art",
-    },
-  ];
-
   return (
     <div className="min-h-screen pt-24 px-6 pb-16">
       <div className="container mx-auto">
@@ -47,13 +18,14 @@ const Artists = () => {
           {artists.map((artist, index) => (
             <div
               key={artist.id}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-fade-in-up ${
+              id={artist.id}
+              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-fade-in-up scroll-mt-24 ${
                 index % 2 === 1 ? "lg:flex-row-reverse" : ""
               }`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                <div className="aspect-square bg-secondary overflow-hidden">
+                <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
                   <img
                     src={artist.image}
                     alt={artist.name}
@@ -72,9 +44,32 @@ const Artists = () => {
                 <p className="text-muted-foreground text-sm mb-6">
                   {artist.location}
                 </p>
-                <p className="text-foreground/80 leading-relaxed text-lg">
+                <p className="text-foreground/80 leading-relaxed text-lg mb-6">
                   {artist.bio}
                 </p>
+                
+                <div className="flex gap-3">
+                  {artist.instagram && (
+                    <a
+                      href={artist.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Instagram
+                    </a>
+                  )}
+                  {artist.twitter && (
+                    <a
+                      href={artist.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Twitter
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))}

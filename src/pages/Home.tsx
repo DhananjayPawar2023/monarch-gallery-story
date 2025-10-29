@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
-import artwork1 from "@/assets/artwork-1.jpg";
-import artwork2 from "@/assets/artwork-2.jpg";
-import artwork3 from "@/assets/artwork-3.jpg";
+import { artworks } from "@/data/artworks";
 
 const Home = () => {
   return (
@@ -46,28 +44,24 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { image: artwork1, title: "Geometric Harmony", artist: "Elena Voss", edition: "Edition of 25" },
-              { image: artwork2, title: "Liquid Gold", artist: "Marcus Chen", edition: "Edition of 15" },
-              { image: artwork3, title: "Minimal Forms", artist: "Sofia Laurent", edition: "Edition of 20" },
-            ].map((item, index) => (
+            {artworks.slice(0, 3).map((artwork, index) => (
               <Link
-                key={index}
-                to="/collections"
+                key={artwork.id}
+                to={`/artwork/${artwork.id}`}
                 className="group hover-lift"
               >
-                <div className="aspect-square bg-secondary mb-4 overflow-hidden">
+                <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
                   <img
-                    src={item.image}
-                    alt={item.title}
+                    src={artwork.image}
+                    alt={artwork.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
-                  {item.title}
+                  {artwork.title}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  {item.artist} • {item.edition}
+                  {artwork.artist} • Edition of {artwork.edition}
                 </p>
               </Link>
             ))}
