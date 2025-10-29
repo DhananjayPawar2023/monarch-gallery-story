@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Collections from "./pages/Collections";
 import Artists from "./pages/Artists";
+import Journal from "./pages/Journal";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/collections" element={<Collections />} />
               <Route path="/artwork/:id" element={<ArtworkDetail />} />
               <Route path="/artists" element={<Artists />} />
+              <Route path="/journal" element={<Journal />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="*" element={<NotFound />} />

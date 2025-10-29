@@ -1,54 +1,83 @@
+import { artworks } from "@/data/artworks";
+import { artists } from "@/data/artists";
+import { getCurrentCollection } from "@/data/collections";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import heroImage from "@/assets/hero-bg.jpg";
-import { artworks } from "@/data/artworks";
+import heroBackground from "@/assets/hero-bg.jpg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Home = () => {
+  const currentCollection = getCurrentCollection();
+  const featuredArtworks = artworks.filter((art) => art.featured);
+  const spotlightArtist = artists[0];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          style={{
+            backgroundImage: `url(${heroBackground})`,
+          }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-6 text-center">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl mb-6 text-background animate-fade-in-up">
-            Bridging Artists and Collectors
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+          <h1 className="font-display text-6xl md:text-8xl mb-8 animate-fade-in-up">
+            Where Art Meets Story
           </h1>
-          <p className="text-xl md:text-2xl text-background/90 mb-8 max-w-2xl mx-auto font-light animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            Through meaningful digital art
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 animate-fade-in-up max-w-3xl mx-auto leading-relaxed" style={{ animationDelay: "0.1s" }}>
+            Monarch Gallery bridges the gap between digital artistry and human emotion—curating works that transcend pixels and speak to something deeper
           </p>
-          <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <Button asChild variant="outline" size="lg" className="bg-background/10 backdrop-blur-sm border-background/40 text-background hover:bg-background hover:text-foreground">
-              <Link to="/collections">
-                Explore Collections <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+          <div className="flex gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <Button size="lg" asChild>
+              <Link to="/collections">View Collection</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/artists">Meet the Artists</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Featured Collections */}
-      <section className="py-24 px-6">
-        <div className="container mx-auto">
-          <div className="mb-16">
-            <h2 className="font-display text-4xl md:text-5xl mb-4">Featured Collections</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl">
-              Curated selections of limited-edition digital artworks from leading and emerging artists.
+      {/* Now Showing Section */}
+      {currentCollection && (
+        <section className="container mx-auto px-6 py-24">
+          <div className="mb-12">
+            <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
+              Now Showing
+            </div>
+            <h2 className="font-display text-5xl md:text-6xl mb-6">
+              {currentCollection.name}
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-3xl leading-relaxed">
+              {currentCollection.description}
             </p>
           </div>
 
+          <div className="bg-secondary/30 border border-border p-8 md:p-12 rounded-lg mb-12">
+            <h3 className="font-display text-2xl mb-4">Curator's Note</h3>
+            <div className="text-foreground/80 leading-relaxed space-y-4">
+              {currentCollection.curatorStatement.split('\n\n').map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {artworks.slice(0, 3).map((artwork, index) => (
+            {featuredArtworks.map((artwork) => (
               <Link
                 key={artwork.id}
                 to={`/artwork/${artwork.id}`}
-                className="group hover-lift"
+                className="group"
               >
                 <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
                   <img
@@ -60,28 +89,102 @@ const Home = () => {
                 <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
                   {artwork.title}
                 </h3>
-                <p className="text-muted-foreground text-sm">
-                  {artwork.artist} • Edition of {artwork.edition}
+                <p className="text-muted-foreground">
+                  {artwork.artist} • {artwork.year}
                 </p>
               </Link>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* Artist Spotlight */}
+      <section className="container mx-auto px-6 py-24 bg-secondary/20">
+        <div className="mb-12">
+          <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
+            Artist Spotlight
+          </div>
+          <h2 className="font-display text-5xl md:text-6xl mb-6">
+            {spotlightArtist.name}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
+            <img
+              src={spotlightArtist.image}
+              alt={spotlightArtist.name}
+              className="w-full h-full object-cover hover-lift"
+            />
+          </div>
+
+          <div>
+            <div className="text-muted-foreground mb-4">
+              {spotlightArtist.location}
+            </div>
+            <p className="text-foreground/80 leading-relaxed text-lg mb-6">
+              {spotlightArtist.shortBio}
+            </p>
+            {spotlightArtist.quote && (
+              <blockquote className="border-l-2 border-accent pl-6 italic text-foreground/70 mb-8">
+                "{spotlightArtist.quote}"
+              </blockquote>
+            )}
+            <Button asChild>
+              <Link to={`/artists#${spotlightArtist.id}`}>View Profile</Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-16">
+          <h3 className="font-display text-3xl mb-8">Works by {spotlightArtist.name}</h3>
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {artworks
+                .filter((art) => art.artistId === spotlightArtist.id)
+                .map((artwork) => (
+                  <CarouselItem key={artwork.id} className="md:basis-1/2 lg:basis-1/3">
+                    <Link to={`/artwork/${artwork.id}`} className="group block">
+                      <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
+                        <img
+                          src={artwork.image}
+                          alt={artwork.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                      <h4 className="font-display text-xl mb-2 group-hover:text-accent transition-colors">
+                        {artwork.title}
+                      </h4>
+                      <p className="text-muted-foreground text-sm">
+                        {artwork.year} • Edition of {artwork.edition}
+                      </p>
+                    </Link>
+                  </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-24 px-6 bg-primary text-primary-foreground">
-        <div className="container mx-auto text-center">
-          <h2 className="font-display text-4xl md:text-5xl mb-6">
-            Discover Your Next Collection
+      {/* Discover More */}
+      <section className="container mx-auto px-6 py-24">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="font-display text-5xl md:text-6xl mb-8">
+            Discover the Collection
           </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto opacity-90">
-            Join collectors worldwide in building meaningful digital art collections.
+          <p className="text-muted-foreground text-lg mb-12 leading-relaxed">
+            Each piece in our gallery tells a story—of vision, process, and the quiet moments where art is born. 
+            Explore our curated collection and find the work that speaks to you.
           </p>
-          <Button asChild variant="outline" size="lg" className="bg-primary-foreground/10 border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-            <Link to="/artists">
-              Meet the Artists <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+          <Button size="lg" asChild>
+            <Link to="/collections">Browse All Artworks</Link>
           </Button>
         </div>
       </section>

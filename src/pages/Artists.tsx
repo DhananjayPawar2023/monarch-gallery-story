@@ -8,10 +8,11 @@ const Artists = () => {
           <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
             Artists
           </h1>
-          <p className="text-muted-foreground text-lg max-w-3xl animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            Meet the visionary artists shaping the future of digital art. Each brings a unique perspective 
-            and mastery to their craft, creating works that transcend the digital medium.
-          </p>
+            <p className="text-muted-foreground text-lg max-w-3xl animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
+              The artists in Monarch Gallery are not just creators—they're storytellers, philosophers, and pioneers. 
+              Each has found their own way to bridge the gap between technology and emotion, creating works that feel 
+              deeply human in a digital age.
+            </p>
         </div>
 
         <div className="space-y-24">
@@ -45,8 +46,22 @@ const Artists = () => {
                   {artist.location}
                 </p>
                 <p className="text-foreground/80 leading-relaxed text-lg mb-6">
-                  {artist.bio}
+                  {artist.shortBio}
                 </p>
+                
+                {artist.quote && (
+                  <blockquote className="border-l-2 border-accent pl-6 italic text-foreground/70 mb-8 leading-relaxed">
+                    "{artist.quote}"
+                  </blockquote>
+                )}
+
+                <div className="prose prose-invert max-w-none mb-8">
+                  {artist.bio.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx} className="text-foreground/70 leading-relaxed mb-4">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
                 
                 <div className="flex gap-3">
                   {artist.instagram && (
@@ -54,7 +69,7 @@ const Artists = () => {
                       href={artist.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
                     >
                       Instagram
                     </a>
@@ -64,9 +79,19 @@ const Artists = () => {
                       href={artist.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
                     >
                       Twitter
+                    </a>
+                  )}
+                  {artist.website && (
+                    <a
+                      href={artist.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
+                    >
+                      Website
                     </a>
                   )}
                 </div>
