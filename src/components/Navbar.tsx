@@ -1,9 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 import logo from "@/assets/monarch-logo.jpeg";
+import { LogIn, Settings } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
+  const { user, isAdmin } = useAuth();
 
   const navLinks = [
     { name: "Explore", path: "/" },
@@ -45,6 +49,24 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+            
+            {isAdmin && (
+              <Button size="sm" variant="outline" asChild className="ml-2">
+                <Link to="/admin">
+                  <Settings className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              </Button>
+            )}
+            
+            {!user && (
+              <Button size="sm" asChild className="ml-2">
+                <Link to="/auth">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

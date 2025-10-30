@@ -14,16 +14,228 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artists: {
+        Row: {
+          audio_title: string | null
+          audio_url: string | null
+          bio: string
+          cover_image_url: string | null
+          created_at: string
+          created_by: string
+          id: string
+          image_url: string
+          instagram: string | null
+          location: string | null
+          name: string
+          quote: string | null
+          short_bio: string | null
+          specialization: string | null
+          twitter: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          audio_title?: string | null
+          audio_url?: string | null
+          bio: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          image_url: string
+          instagram?: string | null
+          location?: string | null
+          name: string
+          quote?: string | null
+          short_bio?: string | null
+          specialization?: string | null
+          twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          audio_title?: string | null
+          audio_url?: string | null
+          bio?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          image_url?: string
+          instagram?: string | null
+          location?: string | null
+          name?: string
+          quote?: string | null
+          short_bio?: string | null
+          specialization?: string | null
+          twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      artworks: {
+        Row: {
+          artist_id: string
+          audio_title: string | null
+          audio_url: string | null
+          collection_id: string | null
+          created_at: string
+          created_by: string
+          description: string
+          dimensions: string | null
+          edition: string
+          featured: boolean
+          id: string
+          image_url: string
+          medium: string
+          price: string | null
+          story: string
+          title: string
+          updated_at: string
+          video_url: string | null
+          year: number
+        }
+        Insert: {
+          artist_id: string
+          audio_title?: string | null
+          audio_url?: string | null
+          collection_id?: string | null
+          created_at?: string
+          created_by: string
+          description: string
+          dimensions?: string | null
+          edition: string
+          featured?: boolean
+          id?: string
+          image_url: string
+          medium: string
+          price?: string | null
+          story: string
+          title: string
+          updated_at?: string
+          video_url?: string | null
+          year: number
+        }
+        Update: {
+          artist_id?: string
+          audio_title?: string | null
+          audio_url?: string | null
+          collection_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          dimensions?: string | null
+          edition?: string
+          featured?: boolean
+          id?: string
+          image_url?: string
+          medium?: string
+          price?: string | null
+          story?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artworks_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artworks_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          audio_title: string | null
+          audio_url: string | null
+          cover_image_url: string | null
+          created_at: string
+          created_by: string
+          curator_statement: string
+          description: string
+          id: string
+          name: string
+          release_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          audio_title?: string | null
+          audio_url?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by: string
+          curator_statement: string
+          description: string
+          id?: string
+          name: string
+          release_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          audio_title?: string | null
+          audio_url?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string
+          curator_statement?: string
+          description?: string
+          id?: string
+          name?: string
+          release_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +362,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
