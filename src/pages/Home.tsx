@@ -35,13 +35,13 @@ const Home = () => {
             Where Art Meets Story
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-12 animate-fade-in-up max-w-3xl mx-auto leading-relaxed" style={{ animationDelay: "0.1s" }}>
-            Monarch Gallery bridges the gap between digital artistry and human emotion—curating works that transcend pixels and speak to something deeper
+            Monarch bridges the gap between digital artistry and human emotion—curating works that transcend pixels and speak to something deeper
           </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <Button size="lg" asChild>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up w-full max-w-md mx-auto sm:max-w-none" style={{ animationDelay: "0.2s" }}>
+            <Button size="lg" asChild className="w-full sm:w-auto">
               <Link to="/collections">View Collection</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
               <Link to="/artists">Meet the Artists</Link>
             </Button>
           </div>

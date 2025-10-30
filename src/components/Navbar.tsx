@@ -21,11 +21,11 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <img 
               src={logo} 
-              alt="Monarch Gallery" 
+              alt="Monarch" 
               className="h-10 w-10 object-contain transition-transform group-hover:scale-105"
             />
             <span className="font-display text-xl tracking-tight group-hover:text-accent transition-colors hidden sm:inline">
-              Monarch Gallery
+              Monarch
             </span>
           </Link>
 

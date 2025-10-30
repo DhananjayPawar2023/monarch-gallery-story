@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <h3 className="font-display text-xl mb-4">Monarch Gallery</h3>
+            <h3 className="font-display text-xl mb-4">Monarch</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Bridging artists and collectors through meaningful digital art.
             </p>
@@ -71,7 +71,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-border">
           <p className="text-xs text-muted-foreground text-center">
-            © {new Date().getFullYear()} Monarch Gallery. All rights reserved.
+            © {new Date().getFullYear()} Monarch. All rights reserved.
           </p>
         </div>
       </div>

@@ -9,7 +9,7 @@ const Artists = () => {
             Artists
           </h1>
             <p className="text-muted-foreground text-lg max-w-3xl animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
-              The artists in Monarch Gallery are not just creators—they're storytellers, philosophers, and pioneers. 
+              The artists at Monarch are not just creators—they're storytellers, philosophers, and pioneers. 
               Each has found their own way to bridge the gap between technology and emotion, creating works that feel 
               deeply human in a digital age.
             </p>

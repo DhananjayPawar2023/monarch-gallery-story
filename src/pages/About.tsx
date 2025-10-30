@@ -3,13 +3,13 @@ const About = () => {
     <div className="min-h-screen pt-24 px-6 pb-16">
       <div className="container mx-auto max-w-4xl">
         <h1 className="font-display text-5xl md:text-7xl mb-12 animate-fade-in-up">
-          About Monarch Gallery
+          About Monarch
         </h1>
 
         <div className="space-y-8 text-lg leading-relaxed">
           <p className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <span className="font-display text-3xl text-accent">M</span>onarch Gallery was founded on the belief 
-            that digital art deserves the same reverence and presentation as traditional fine art. We bridge 
+            <span className="font-display text-3xl text-accent">M</span>onarch was founded on the belief 
+            that digital art deserves the same reverence and presentation as traditional fine art. We bridge
             the gap between artists and collectors through curated exhibitions, thoughtful storytelling, and 
             an unwavering commitment to artistic excellence.
           </p>
@@ -51,7 +51,7 @@ const About = () => {
             <h2 className="font-display text-3xl mb-6">Join Our Community</h2>
             <p className="text-muted-foreground">
               Whether you're an artist seeking representation or a collector building your collection, 
-              Monarch Gallery offers a space where digital art is celebrated, preserved, and elevated to 
+              Monarch offers a space where digital art is celebrated, preserved, and elevated to 
               its rightful place in the contemporary art world.
             </p>
           </div>
