@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom";
-import { artworks } from "@/data/artworks";
+import { useArtworks } from "@/hooks/useArtworks";
 
 const Collections = () => {
+  const { data: artworks, isLoading } = useArtworks();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 px-6 pb-16 flex items-center justify-center">
+        <p className="text-muted-foreground">Loading artworks...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-24 px-6 pb-16">
       <div className="container mx-auto">
@@ -15,35 +25,39 @@ const Collections = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {artworks.map((artwork, index) => (
-            <Link
-              key={artwork.id}
-              to={`/artwork/${artwork.id}`}
-              className="group hover-lift animate-fade-in-up block"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="aspect-square bg-secondary mb-6 overflow-hidden">
-                <img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div>
-                <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
-                  {artwork.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  {artwork.artist} • {artwork.year} • Edition of {artwork.edition}
-                </p>
-                <p className="text-sm text-foreground/80 leading-relaxed">
-                  {artwork.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {!artworks || artworks.length === 0 ? (
+          <p className="text-center text-muted-foreground">No artworks available yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {artworks.map((artwork, index) => (
+              <Link
+                key={artwork.id}
+                to={`/artwork/${artwork.id}`}
+                className="group hover-lift animate-fade-in-up block"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="aspect-square bg-secondary mb-6 overflow-hidden rounded-lg">
+                  <img
+                    src={artwork.image_url}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
+                    {artwork.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {artwork.year} • Edition of {artwork.edition}
+                  </p>
+                  <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">
+                    {artwork.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

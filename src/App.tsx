@@ -16,6 +16,9 @@ import NotFound from "./pages/NotFound";
 import ArtworkDetail from "./pages/ArtworkDetail";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/admin/Dashboard";
+import ArtistsManager from "./pages/admin/ArtistsManager";
+import ArtworksManager from "./pages/admin/ArtworksManager";
+import CollectionsManager from "./pages/admin/CollectionsManager";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +42,9 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/artists" element={<ArtistsManager />} />
+                <Route path="/admin/artworks" element={<ArtworksManager />} />
+                <Route path="/admin/collections" element={<CollectionsManager />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
