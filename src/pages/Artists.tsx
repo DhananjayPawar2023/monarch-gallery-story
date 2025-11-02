@@ -1,4 +1,5 @@
 import { useArtists } from "@/hooks/useArtists";
+import { Link } from "react-router-dom";
 
 const Artists = () => {
   const { data: artists, isLoading } = useArtists();
@@ -30,10 +31,11 @@ const Artists = () => {
         ) : (
           <div className="space-y-24">
             {artists.map((artist, index) => (
-            <div
+            <Link
               key={artist.id}
+              to={`/artists/${artist.id}`}
               id={artist.id}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-fade-in-up scroll-mt-24 ${
+              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-fade-in-up scroll-mt-24 group ${
                 index % 2 === 1 ? "lg:flex-row-reverse" : ""
               }`}
               style={{ animationDelay: `${index * 0.2}s` }}
@@ -54,7 +56,7 @@ const Artists = () => {
                     {artist.specialization}
                   </div>
                 )}
-                <h2 className="font-display text-4xl md:text-5xl mb-3">
+                <h2 className="font-display text-4xl md:text-5xl mb-3 group-hover:text-accent transition-colors">
                   {artist.name}
                 </h2>
                 {artist.location && (
@@ -73,49 +75,10 @@ const Artists = () => {
                     "{artist.quote}"
                   </blockquote>
                 )}
-
-                <div className="prose prose-invert max-w-none mb-8">
-                  {artist.bio.split('\n\n').map((paragraph, idx) => (
-                    <p key={idx} className="text-foreground/70 leading-relaxed mb-4">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
                 
-                <div className="flex gap-3">
-                  {artist.instagram && (
-                    <a
-                      href={artist.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
-                    >
-                      Instagram
-                    </a>
-                  )}
-                  {artist.twitter && (
-                    <a
-                      href={artist.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
-                    >
-                      Twitter
-                    </a>
-                  )}
-                  {artist.website && (
-                    <a
-                      href={artist.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
-                    >
-                      Website
-                    </a>
-                  )}
-                </div>
+                <p className="text-accent font-semibold">View Full Profile →</p>
               </div>
-            </div>
+            </Link>
             ))}
           </div>
         )}

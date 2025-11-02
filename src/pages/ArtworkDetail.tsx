@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getArtworkById, getArtworksByArtist } from "@/data/artworks";
-import { getArtistById } from "@/data/artists";
+import { useArtwork } from "@/hooks/useArtworks";
+import { useArtist } from "@/hooks/useArtists";
+import { useArtworks } from "@/hooks/useArtworks";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -15,7 +16,17 @@ import {
 const ArtworkDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const artwork = id ? getArtworkById(id) : undefined;
+  const { data: artwork, isLoading: artworkLoading } = useArtwork(id || "");
+  const { data: artist } = useArtist(artwork?.artist_id || "");
+  const { data: allArtworks } = useArtworks();
+
+  if (artworkLoading) {
+    return (
+      <div className="min-h-screen pt-24 px-6 pb-16 flex items-center justify-center">
+        <p className="text-muted-foreground">Loading artwork...</p>
+      </div>
+    );
+  }
 
   if (!artwork) {
     return (
@@ -30,10 +41,9 @@ const ArtworkDetail = () => {
     );
   }
 
-  const artist = getArtistById(artwork.artistId);
-  const moreFromArtist = getArtworksByArtist(artwork.artistId).filter(
-    (a) => a.id !== artwork.id
-  );
+  const moreFromArtist = allArtworks?.filter(
+    (a) => a.artist_id === artwork.artist_id && a.id !== artwork.id
+  ) || [];
 
   return (
     <div className="min-h-screen pt-24">
@@ -53,7 +63,7 @@ const ArtworkDetail = () => {
       <div className="container mx-auto px-6 mb-16">
         <div className="aspect-[16/10] bg-secondary overflow-hidden rounded-lg">
           <img
-            src={artwork.image}
+            src={artwork.image_url}
             alt={artwork.title}
             className="w-full h-full object-cover animate-fade-in"
           />
@@ -71,25 +81,27 @@ const ArtworkDetail = () => {
               {artwork.title}
             </h1>
             <Link
-              to={`/artists#${artwork.artistId}`}
+              to={`/artists/${artwork.artist_id}`}
               className="text-xl text-muted-foreground hover:text-accent transition-colors mb-8 inline-block"
             >
-              {artwork.artist}
+              {artist?.name || "Unknown Artist"}
             </Link>
 
             <div className="flex items-center gap-6 mb-8 text-sm text-muted-foreground">
               <div>
                 <span className="block font-semibold text-foreground mb-1">Edition</span>
-                {artwork.edition} pieces
+                {artwork.edition}
               </div>
               <div>
                 <span className="block font-semibold text-foreground mb-1">Year</span>
                 {artwork.year}
               </div>
-              <div>
-                <span className="block font-semibold text-foreground mb-1">Price</span>
-                {artwork.price || "Sold Out"}
-              </div>
+              {artwork.price && (
+                <div>
+                  <span className="block font-semibold text-foreground mb-1">Price</span>
+                  {artwork.price}
+                </div>
+              )}
             </div>
 
             <p className="text-foreground/80 leading-relaxed text-lg mb-8">
@@ -97,8 +109,8 @@ const ArtworkDetail = () => {
             </p>
 
             <div className="flex gap-4">
-              <Button size="lg" disabled={!artwork.available}>
-                {artwork.available ? "Collect" : "Sold Out"}
+              <Button size="lg">
+                Collect
               </Button>
               <Button size="lg" variant="outline">
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -109,15 +121,19 @@ const ArtworkDetail = () => {
 
           <div>
             <h2 className="font-display text-3xl mb-6">The Story</h2>
-            <p className="text-foreground/80 leading-relaxed mb-8">
-              {artwork.story}
-            </p>
+            <div className="prose prose-invert max-w-none mb-8">
+              {artwork.story.split('\n\n').map((paragraph, idx) => (
+                <p key={idx} className="text-foreground/80 leading-relaxed mb-4">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
 
-            {artwork.audioUrl && (
+            {artwork.audio_url && (
               <AudioPlayer
-                audioUrl={artwork.audioUrl}
-                title={`Story of ${artwork.title}`}
-                artist={artwork.artist}
+                audioUrl={artwork.audio_url}
+                title={artwork.audio_title || `Story of ${artwork.title}`}
+                artist={artist?.name || "Unknown Artist"}
                 className="mb-8"
               />
             )}
@@ -127,20 +143,22 @@ const ArtworkDetail = () => {
                 <h3 className="font-display text-xl mb-4">About the Artist</h3>
                 <div className="flex items-start gap-4">
                   <img
-                    src={artist.image}
+                    src={artist.image_url}
                     alt={artist.name}
                     className="w-16 h-16 object-cover rounded-full"
                   />
                   <div>
                     <Link
-                      to={`/artists#${artist.id}`}
+                      to={`/artists/${artist.id}`}
                       className="font-semibold hover:text-accent transition-colors"
                     >
                       {artist.name}
                     </Link>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {artist.location}
-                    </p>
+                    {artist.location && (
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {artist.location}
+                      </p>
+                    )}
                     <p className="text-sm text-foreground/70 leading-relaxed">
                       {artist.bio.slice(0, 150)}...
                     </p>
@@ -153,9 +171,9 @@ const ArtworkDetail = () => {
       </div>
 
       {/* More from Artist */}
-      {moreFromArtist.length > 0 && (
+      {moreFromArtist.length > 0 && artist && (
         <div className="container mx-auto px-6 pb-24">
-          <h2 className="font-display text-4xl mb-12">More from {artwork.artist}</h2>
+          <h2 className="font-display text-4xl mb-12">More from {artist.name}</h2>
           <Carousel
             opts={{
               align: "start",
@@ -169,9 +187,9 @@ const ArtworkDetail = () => {
                     to={`/artwork/${item.id}`}
                     className="group block"
                   >
-                    <div className="aspect-square bg-secondary mb-4 overflow-hidden">
+                    <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
                       <img
-                        src={item.image}
+                        src={item.image_url}
                         alt={item.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

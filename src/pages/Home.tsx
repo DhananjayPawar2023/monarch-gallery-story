@@ -1,9 +1,9 @@
-import { artworks } from "@/data/artworks";
-import { artists } from "@/data/artists";
-import { getCurrentCollection } from "@/data/collections";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroBackground from "@/assets/hero-bg.jpg";
+import { useCollections } from "@/hooks/useCollections";
+import { useArtworks } from "@/hooks/useArtworks";
+import { useArtists } from "@/hooks/useArtists";
 import {
   Carousel,
   CarouselContent,
@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/carousel";
 
 const Home = () => {
-  const currentCollection = getCurrentCollection();
-  const featuredArtworks = artworks.filter((art) => art.featured);
-  const spotlightArtist = artists[0];
+  const { data: collections } = useCollections();
+  const { data: artworks } = useArtworks();
+  const { data: artists } = useArtists();
+
+  const currentCollection = collections?.find(c => c.status === "published")?.[0];
+  const featuredArtworks = artworks?.filter((art) => art.featured) || [];
+  const spotlightArtist = artists?.[0];
 
   return (
     <div className="min-h-screen">
@@ -73,105 +77,114 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredArtworks.map((artwork) => (
-              <Link
-                key={artwork.id}
-                to={`/artwork/${artwork.id}`}
-                className="group"
-              >
-                <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
-                  <img
-                    src={artwork.image}
-                    alt={artwork.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
-                  {artwork.title}
-                </h3>
-                <p className="text-muted-foreground">
-                  {artwork.artist} • {artwork.year}
-                </p>
-              </Link>
-            ))}
+            {featuredArtworks.map((artwork) => {
+              const artist = artists?.find(a => a.id === artwork.artist_id);
+              return (
+                <Link
+                  key={artwork.id}
+                  to={`/artwork/${artwork.id}`}
+                  className="group"
+                >
+                  <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
+                    <img
+                      src={artwork.image_url}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
+                    {artwork.title}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {artist?.name} • {artwork.year}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
 
       {/* Artist Spotlight */}
-      <section className="container mx-auto px-6 py-24 bg-secondary/20">
-        <div className="mb-12">
-          <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
-            Artist Spotlight
-          </div>
-          <h2 className="font-display text-5xl md:text-6xl mb-6">
-            {spotlightArtist.name}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
-            <img
-              src={spotlightArtist.image}
-              alt={spotlightArtist.name}
-              className="w-full h-full object-cover hover-lift"
-            />
-          </div>
-
-          <div>
-            <div className="text-muted-foreground mb-4">
-              {spotlightArtist.location}
+      {spotlightArtist && (
+        <section className="container mx-auto px-6 py-24 bg-secondary/20">
+          <div className="mb-12">
+            <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
+              Artist Spotlight
             </div>
-            <p className="text-foreground/80 leading-relaxed text-lg mb-6">
-              {spotlightArtist.shortBio}
-            </p>
-            {spotlightArtist.quote && (
-              <blockquote className="border-l-2 border-accent pl-6 italic text-foreground/70 mb-8">
-                "{spotlightArtist.quote}"
-              </blockquote>
-            )}
-            <Button asChild>
-              <Link to={`/artists#${spotlightArtist.id}`}>View Profile</Link>
-            </Button>
+            <h2 className="font-display text-5xl md:text-6xl mb-6">
+              {spotlightArtist.name}
+            </h2>
           </div>
-        </div>
 
-        <div className="mt-16">
-          <h3 className="font-display text-3xl mb-8">Works by {spotlightArtist.name}</h3>
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="w-full"
-          >
-            <CarouselContent>
-              {artworks
-                .filter((art) => art.artistId === spotlightArtist.id)
-                .map((artwork) => (
-                  <CarouselItem key={artwork.id} className="md:basis-1/2 lg:basis-1/3">
-                    <Link to={`/artwork/${artwork.id}`} className="group block">
-                      <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
-                        <img
-                          src={artwork.image}
-                          alt={artwork.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </div>
-                      <h4 className="font-display text-xl mb-2 group-hover:text-accent transition-colors">
-                        {artwork.title}
-                      </h4>
-                      <p className="text-muted-foreground text-sm">
-                        {artwork.year} • Edition of {artwork.edition}
-                      </p>
-                    </Link>
-                  </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
+              <img
+                src={spotlightArtist.image_url}
+                alt={spotlightArtist.name}
+                className="w-full h-full object-cover hover-lift"
+              />
+            </div>
+
+            <div>
+              {spotlightArtist.location && (
+                <div className="text-muted-foreground mb-4">
+                  {spotlightArtist.location}
+                </div>
+              )}
+              {spotlightArtist.short_bio && (
+                <p className="text-foreground/80 leading-relaxed text-lg mb-6">
+                  {spotlightArtist.short_bio}
+                </p>
+              )}
+              {spotlightArtist.quote && (
+                <blockquote className="border-l-2 border-accent pl-6 italic text-foreground/70 mb-8">
+                  "{spotlightArtist.quote}"
+                </blockquote>
+              )}
+              <Button asChild>
+                <Link to={`/artists/${spotlightArtist.id}`}>View Profile</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <h3 className="font-display text-3xl mb-8">Works by {spotlightArtist.name}</h3>
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {artworks
+                  ?.filter((art) => art.artist_id === spotlightArtist.id)
+                  .map((artwork) => (
+                    <CarouselItem key={artwork.id} className="md:basis-1/2 lg:basis-1/3">
+                      <Link to={`/artwork/${artwork.id}`} className="group block">
+                        <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
+                          <img
+                            src={artwork.image_url}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        </div>
+                        <h4 className="font-display text-xl mb-2 group-hover:text-accent transition-colors">
+                          {artwork.title}
+                        </h4>
+                        <p className="text-muted-foreground text-sm">
+                          {artwork.year} • Edition of {artwork.edition}
+                        </p>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+        </section>
+      )}
 
       {/* Discover More */}
       <section className="container mx-auto px-6 py-24">
