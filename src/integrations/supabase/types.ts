@@ -200,6 +200,60 @@ export type Database = {
         }
         Relationships: []
       }
+      journal_entries: {
+        Row: {
+          author: string
+          category: string
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          created_by: string
+          excerpt: string
+          featured: boolean
+          id: string
+          published_date: string
+          read_time: string
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          category: string
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by: string
+          excerpt: string
+          featured?: boolean
+          id?: string
+          published_date?: string
+          read_time: string
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          category?: string
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string
+          excerpt?: string
+          featured?: boolean
+          id?: string
+          published_date?: string
+          read_time?: string
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

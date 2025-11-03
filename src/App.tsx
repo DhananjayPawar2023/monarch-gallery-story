@@ -11,6 +11,7 @@ import Collections from "./pages/Collections";
 import Artists from "./pages/Artists";
 import ArtistDetail from "./pages/ArtistDetail";
 import Journal from "./pages/Journal";
+import JournalDetail from "./pages/JournalDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -20,6 +21,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import ArtistsManager from "./pages/admin/ArtistsManager";
 import ArtworksManager from "./pages/admin/ArtworksManager";
 import CollectionsManager from "./pages/admin/CollectionsManager";
+import JournalManager from "./pages/admin/JournalManager";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,7 @@ const App = () => (
                 <Route path="/artists" element={<Artists />} />
                 <Route path="/artists/:id" element={<ArtistDetail />} />
                 <Route path="/journal" element={<Journal />} />
+                <Route path="/journal/:slug" element={<JournalDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />
@@ -47,6 +50,7 @@ const App = () => (
                 <Route path="/admin/artists" element={<ArtistsManager />} />
                 <Route path="/admin/artworks" element={<ArtworksManager />} />
                 <Route path="/admin/collections" element={<CollectionsManager />} />
+                <Route path="/admin/journal" element={<JournalManager />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
