@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useArtworks } from "@/hooks/useArtworks";
+import { useArtworks, useUpdateArtwork, useDeleteArtwork } from "@/hooks/useArtworks";
 import { useArtists } from "@/hooks/useArtists";
 import { useAllCollections } from "@/hooks/useCollections";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,8 +12,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArtworkEditDialog } from "@/components/admin/ArtworkEditDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const ArtworksManager = () => {
   const navigate = useNavigate();
@@ -21,9 +23,13 @@ const ArtworksManager = () => {
   const { data: artworks } = useArtworks();
   const { data: artists } = useArtists();
   const { data: collections } = useAllCollections();
+  const updateArtwork = useUpdateArtwork();
+  const deleteArtwork = useDeleteArtwork();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [editingArtwork, setEditingArtwork] = useState<any>(null);
+  const [deletingArtwork, setDeletingArtwork] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     artist_id: "",
@@ -108,6 +114,42 @@ const ArtworksManager = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdate = async (updates: any) => {
+    try {
+      await updateArtwork.mutateAsync({ id: editingArtwork.id, updates });
+      toast({
+        title: "Artwork updated",
+        description: "The artwork has been updated successfully.",
+      });
+      setEditingArtwork(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deletingArtwork) return;
+    
+    try {
+      await deleteArtwork.mutateAsync(deletingArtwork);
+      toast({
+        title: "Artwork deleted",
+        description: "The artwork has been removed.",
+      });
+      setDeletingArtwork(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -294,12 +336,59 @@ const ArtworksManager = () => {
                   />
                 </div>
                 <h3 className="font-display text-lg mb-1">{artwork.title}</h3>
-                <p className="text-sm text-muted-foreground">{artwork.year}</p>
+                <p className="text-sm text-muted-foreground mb-4">{artwork.year}</p>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setEditingArtwork(artwork)}
+                    className="flex-1"
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={() => setDeletingArtwork(artwork.id)}
+                    className="flex-1"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {editingArtwork && (
+        <ArtworkEditDialog
+          artwork={editingArtwork}
+          artists={artists || []}
+          collections={collections || []}
+          open={!!editingArtwork}
+          onOpenChange={(open) => !open && setEditingArtwork(null)}
+          onSave={handleUpdate}
+          isLoading={updateArtwork.isPending}
+        />
+      )}
+
+      <AlertDialog open={!!deletingArtwork} onOpenChange={(open) => !open && setDeletingArtwork(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this artwork. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

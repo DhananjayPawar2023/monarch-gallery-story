@@ -1,23 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useArtists } from "@/hooks/useArtists";
+import { useArtists, useUpdateArtist, useDeleteArtist } from "@/hooks/useArtists";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArtistEditDialog } from "@/components/admin/ArtistEditDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const ArtistsManager = () => {
   const navigate = useNavigate();
   const { isAdmin, user } = useAuth();
   const { data: artists } = useArtists();
+  const updateArtist = useUpdateArtist();
+  const deleteArtist = useDeleteArtist();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [editingArtist, setEditingArtist] = useState<any>(null);
+  const [deletingArtist, setDeletingArtist] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
@@ -99,6 +105,42 @@ const ArtistsManager = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdate = async (updates: any) => {
+    try {
+      await updateArtist.mutateAsync({ id: editingArtist.id, updates });
+      toast({
+        title: "Artist updated",
+        description: "The artist has been updated successfully.",
+      });
+      setEditingArtist(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deletingArtist) return;
+    
+    try {
+      await deleteArtist.mutateAsync(deletingArtist);
+      toast({
+        title: "Artist deleted",
+        description: "The artist has been removed.",
+      });
+      setDeletingArtist(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -252,13 +294,58 @@ const ArtistsManager = () => {
                 </div>
                 <h3 className="font-display text-xl mb-2">{artist.name}</h3>
                 {artist.location && (
-                  <p className="text-sm text-muted-foreground">{artist.location}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{artist.location}</p>
                 )}
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setEditingArtist(artist)}
+                    className="flex-1"
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={() => setDeletingArtist(artist.id)}
+                    className="flex-1"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {editingArtist && (
+        <ArtistEditDialog
+          artist={editingArtist}
+          open={!!editingArtist}
+          onOpenChange={(open) => !open && setEditingArtist(null)}
+          onSave={handleUpdate}
+          isLoading={updateArtist.isPending}
+        />
+      )}
+
+      <AlertDialog open={!!deletingArtist} onOpenChange={(open) => !open && setDeletingArtist(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this artist. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

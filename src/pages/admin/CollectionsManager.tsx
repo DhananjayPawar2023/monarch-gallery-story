@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useAllCollections } from "@/hooks/useCollections";
+import { useAllCollections, useUpdateCollection, useDeleteCollection } from "@/hooks/useCollections";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,15 +9,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CollectionEditDialog } from "@/components/admin/CollectionEditDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const CollectionsManager = () => {
   const navigate = useNavigate();
   const { isAdmin, user } = useAuth();
   const { data: collections } = useAllCollections();
+  const updateCollection = useUpdateCollection();
+  const deleteCollection = useDeleteCollection();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<any>(null);
+  const [deletingCollection, setDeletingCollection] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -65,6 +71,42 @@ const CollectionsManager = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdate = async (updates: any) => {
+    try {
+      await updateCollection.mutateAsync({ id: editingCollection.id, updates });
+      toast({
+        title: "Collection updated",
+        description: "The collection has been updated successfully.",
+      });
+      setEditingCollection(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deletingCollection) return;
+    
+    try {
+      await deleteCollection.mutateAsync(deletingCollection);
+      toast({
+        title: "Collection deleted",
+        description: "The collection has been removed.",
+      });
+      setDeletingCollection(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -167,7 +209,7 @@ const CollectionsManager = () => {
                 className="bg-secondary/20 border border-border p-6 rounded-lg"
               >
                 <div className="flex items-start justify-between">
-                  <div>
+                  <div className="flex-1">
                     <h3 className="font-display text-xl mb-2">{collection.name}</h3>
                     <p className="text-sm text-muted-foreground mb-2">
                       {collection.description}
@@ -185,12 +227,55 @@ const CollectionsManager = () => {
                       </span>
                     </div>
                   </div>
+                  <div className="flex gap-2 ml-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setEditingCollection(collection)}
+                    >
+                      <Pencil className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => setDeletingCollection(collection.id)}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {editingCollection && (
+        <CollectionEditDialog
+          collection={editingCollection}
+          open={!!editingCollection}
+          onOpenChange={(open) => !open && setEditingCollection(null)}
+          onSave={handleUpdate}
+          isLoading={updateCollection.isPending}
+        />
+      )}
+
+      <AlertDialog open={!!deletingCollection} onOpenChange={(open) => !open && setDeletingCollection(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this collection. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
