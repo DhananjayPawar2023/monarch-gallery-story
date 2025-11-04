@@ -1,36 +1,80 @@
+import { useState, useMemo } from "react";
 import { useArtists } from "@/hooks/useArtists";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
+import { SearchFilter } from "@/components/SearchFilter";
+import { ArtistSkeleton } from "@/components/LoadingSkeleton";
 
 const Artists = () => {
   const { data: artists, isLoading } = useArtists();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("name");
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen pt-24 px-6 pb-16 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading artists...</p>
-      </div>
+  const sortOptions = [
+    { value: "name", label: "Name A-Z" },
+    { value: "newest", label: "Newest First" },
+  ];
+
+  const filteredAndSortedArtists = useMemo(() => {
+    if (!artists) return [];
+    
+    let filtered = artists.filter((artist) =>
+      artist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (artist.specialization?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+      (artist.short_bio?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
     );
-  }
+
+    switch (sortBy) {
+      case "newest":
+        return [...filtered].reverse();
+      case "name":
+      default:
+        return filtered.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  }, [artists, searchTerm, sortBy]);
 
   return (
-    <div className="min-h-screen pt-24 px-6 pb-16">
-      <div className="container mx-auto">
-        <div className="mb-16">
-          <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
-            Artists
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-3xl animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
-            The artists at Monarch are not just creators—they're storytellers, philosophers, and pioneers. 
-            Each has found their own way to bridge the gap between technology and emotion, creating works that feel 
-            deeply human in a digital age.
-          </p>
-        </div>
+    <>
+      <SEO 
+        title="Featured Artists - Digital Art Pioneers"
+        description="Meet the visionary artists at Monarch - storytellers, pioneers, and digital art creators bridging technology and emotion through exceptional artworks."
+      />
+      <main className="min-h-screen pt-24 px-6 pb-16">
+        <div className="container mx-auto">
+          <header className="mb-12">
+            <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
+              Artists
+            </h1>
+            <p className="text-muted-foreground text-lg max-w-3xl animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
+              The artists at Monarch are not just creators—they're storytellers, philosophers, and pioneers. 
+              Each has found their own way to bridge the gap between technology and emotion, creating works that feel 
+              deeply human in a digital age.
+            </p>
+          </header>
 
-        {!artists || artists.length === 0 ? (
-          <p className="text-center text-muted-foreground">No artists available yet.</p>
-        ) : (
-          <div className="space-y-24">
-            {artists.map((artist, index) => (
+          <SearchFilter
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            sortOptions={sortOptions}
+          />
+
+          {isLoading ? (
+            <div className="space-y-24">
+              {[...Array(3)].map((_, i) => (
+                <ArtistSkeleton key={i} />
+              ))}
+            </div>
+          ) : filteredAndSortedArtists.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                {searchTerm ? "No artists match your search." : "No artists available yet."}
+              </p>
+            </div>
+          ) : (
+            <section className="space-y-24">
+              {filteredAndSortedArtists.map((artist, index) => (
             <Link
               key={artist.id}
               to={`/artists/${artist.id}`}
@@ -44,7 +88,8 @@ const Artists = () => {
                 <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
                   <img
                     src={artist.image_url}
-                    alt={artist.name}
+                    alt={`${artist.name} - Digital artist profile`}
+                    loading="lazy"
                     className="w-full h-full object-cover hover-lift"
                   />
                 </div>
@@ -78,12 +123,13 @@ const Artists = () => {
                 
                 <p className="text-accent font-semibold">View Full Profile →</p>
               </div>
-            </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+              </Link>
+              ))}
+            </section>
+          )}
+        </div>
+      </main>
+    </>
   );
 };
 

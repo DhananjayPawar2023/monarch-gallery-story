@@ -4,6 +4,7 @@ import heroBackground from "@/assets/hero-bg.jpg";
 import { useCollections } from "@/hooks/useCollections";
 import { useArtworks } from "@/hooks/useArtworks";
 import { useArtists } from "@/hooks/useArtists";
+import { SEO } from "@/components/SEO";
 import {
   Carousel,
   CarouselContent,
@@ -17,14 +18,19 @@ const Home = () => {
   const { data: artworks } = useArtworks();
   const { data: artists } = useArtists();
 
-  const currentCollection = collections?.find(c => c.status === "published")?.[0];
-  const featuredArtworks = artworks?.filter((art) => art.featured) || [];
+  const currentCollection = collections?.[0];
+  const featuredArtworks = artworks?.filter((art) => art.featured).slice(0, 3) || [];
   const spotlightArtist = artists?.[0];
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <>
+      <SEO />
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section 
+          className="relative h-screen flex items-center justify-center overflow-hidden" 
+          aria-label="Hero banner"
+        >
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -70,7 +76,7 @@ const Home = () => {
           <div className="bg-secondary/30 border border-border p-8 md:p-12 rounded-lg mb-12">
             <h3 className="font-display text-2xl mb-4">Curator's Note</h3>
             <div className="text-foreground/80 leading-relaxed space-y-4">
-              {currentCollection.curatorStatement.split('\n\n').map((paragraph, index) => (
+              {currentCollection.curator_statement.split('\n\n').map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
@@ -88,7 +94,8 @@ const Home = () => {
                   <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
                     <img
                       src={artwork.image_url}
-                      alt={artwork.title}
+                      alt={`${artwork.title} by ${artist?.name}`}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
@@ -121,7 +128,8 @@ const Home = () => {
             <div className="aspect-square bg-secondary overflow-hidden rounded-lg">
               <img
                 src={spotlightArtist.image_url}
-                alt={spotlightArtist.name}
+                alt={`${spotlightArtist.name} - Featured artist`}
+                loading="lazy"
                 className="w-full h-full object-cover hover-lift"
               />
             </div>
@@ -165,7 +173,8 @@ const Home = () => {
                         <div className="aspect-square bg-secondary mb-4 overflow-hidden rounded-lg">
                           <img
                             src={artwork.image_url}
-                            alt={artwork.title}
+                            alt={`${artwork.title} artwork`}
+                            loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         </div>
@@ -202,6 +211,7 @@ const Home = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

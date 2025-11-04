@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -49,9 +50,14 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 px-6 pb-16">
-      <div className="container mx-auto max-w-4xl">
-        <div className="mb-16">
+    <>
+      <SEO 
+        title="Contact Monarch - Get in Touch"
+        description="Connect with Monarch for artist submissions, collector inquiries, or general questions about our curated digital art platform."
+      />
+      <main className="min-h-screen pt-24 px-6 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          <header className="mb-16">
           <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
             Get in Touch
           </h1>
@@ -59,9 +65,9 @@ const Contact = () => {
             Whether you're an artist interested in showcasing your work, a collector seeking guidance, 
             or simply curious about digital art, we'd love to hear from you.
           </p>
-        </div>
+          </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
             <div>
               <Label htmlFor="name" className="text-sm font-body">Name</Label>
@@ -149,9 +155,10 @@ const Contact = () => {
               </p>
             </div>
           </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 };
 

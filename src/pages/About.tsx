@@ -1,8 +1,15 @@
+import { SEO } from "@/components/SEO";
+
 const About = () => {
   return (
-    <div className="min-h-screen pt-24 px-6 pb-16">
-      <div className="container mx-auto max-w-4xl">
-        <h1 className="font-display text-5xl md:text-7xl mb-12 animate-fade-in-up">
+    <>
+      <SEO 
+        title="About Monarch - Curated Digital Art Platform"
+        description="Monarch bridges digital artists and collectors through curated exhibitions, thoughtful storytelling, and an unwavering commitment to artistic excellence in contemporary digital art."
+      />
+      <main className="min-h-screen pt-24 px-6 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          <h1 className="font-display text-5xl md:text-7xl mb-12 animate-fade-in-up">
           About Monarch
         </h1>
 
@@ -55,9 +62,10 @@ const About = () => {
               its rightful place in the contemporary art world.
             </p>
           </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 };
 

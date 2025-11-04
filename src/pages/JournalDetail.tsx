@@ -2,6 +2,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useJournalEntry } from "@/hooks/useJournal";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { JournalSkeleton } from "@/components/LoadingSkeleton";
 
 const JournalDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -10,8 +12,10 @@ const JournalDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 px-6 pb-16 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+      <div className="min-h-screen pt-24 px-6 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          <JournalSkeleton />
+        </div>
       </div>
     );
   }
@@ -30,20 +34,30 @@ const JournalDetail = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 px-6 pb-16">
-      <div className="container mx-auto max-w-4xl">
-        {/* Back Button */}
-        <Button
-          onClick={() => navigate(-1)}
-          variant="ghost"
-          className="group mb-8"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-          Back
-        </Button>
+    <>
+      <SEO 
+        title={entry.title}
+        description={entry.excerpt}
+        image={entry.cover_image_url}
+        article
+      />
+      <article className="min-h-screen pt-24 px-6 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          {/* Back Button */}
+          <nav>
+            <Button
+              onClick={() => navigate(-1)}
+              variant="ghost"
+              className="group mb-8"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              Back
+            </Button>
+          </nav>
 
-        {/* Article Header */}
-        <article>
+          {/* Article Header */}
+          <section>
           <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-6">
             {entry.category}
           </div>
@@ -66,16 +80,16 @@ const JournalDetail = () => {
             <span>{entry.read_time}</span>
           </div>
 
-          {/* Cover Image */}
-          {entry.cover_image_url && (
-            <div className="aspect-[16/9] bg-secondary overflow-hidden rounded-lg mb-12">
-              <img
-                src={entry.cover_image_url}
-                alt={entry.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+            {entry.cover_image_url && (
+              <div className="aspect-[16/9] bg-secondary overflow-hidden rounded-lg mb-12">
+                <img
+                  src={entry.cover_image_url}
+                  alt={`${entry.title} cover image`}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
           {/* Content */}
           <div className="prose prose-lg prose-invert max-w-none">
@@ -86,18 +100,19 @@ const JournalDetail = () => {
             ))}
           </div>
 
-          {/* Footer */}
-          <div className="mt-16 pt-8 border-t border-border">
-            <Link
-              to="/journal"
-              className="text-accent hover:underline inline-flex items-center"
-            >
-              ← Back to all articles
-            </Link>
-          </div>
-        </article>
-      </div>
-    </div>
+            {/* Footer */}
+            <footer className="mt-16 pt-8 border-t border-border">
+              <Link
+                to="/journal"
+                className="text-accent hover:underline inline-flex items-center"
+              >
+                ← Back to all articles
+              </Link>
+            </footer>
+          </section>
+        </div>
+      </article>
+    </>
   );
 };
 
