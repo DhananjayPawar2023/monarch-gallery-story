@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { FileUpload } from "./FileUpload";
 
 interface CollectionEditDialogProps {
   collection: Collection;
@@ -29,6 +30,9 @@ export function CollectionEditDialog({
     curator_statement: collection.curator_statement,
     release_date: collection.release_date,
     status: collection.status as "draft" | "published",
+    cover_image_url: collection.cover_image_url || "",
+    audio_url: collection.audio_url || "",
+    audio_title: collection.audio_title || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -105,6 +109,31 @@ export function CollectionEditDialog({
               </Select>
             </div>
           </div>
+
+          <FileUpload
+            bucket="artworks"
+            currentUrl={formData.cover_image_url}
+            onUploadComplete={(url) => setFormData({ ...formData, cover_image_url: url })}
+            accept="image/*"
+            label="Cover Image"
+          />
+
+          <div>
+            <Label htmlFor="audio_title">Audio Title</Label>
+            <Input
+              id="audio_title"
+              value={formData.audio_title}
+              onChange={(e) => setFormData({ ...formData, audio_title: e.target.value })}
+            />
+          </div>
+
+          <FileUpload
+            bucket="artworks"
+            currentUrl={formData.audio_url}
+            onUploadComplete={(url) => setFormData({ ...formData, audio_url: url })}
+            accept="audio/*"
+            label="Audio File"
+          />
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

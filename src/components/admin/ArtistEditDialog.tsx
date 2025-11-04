@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { FileUpload } from "./FileUpload";
 
 interface ArtistEditDialogProps {
   artist: Artist;
@@ -26,6 +27,10 @@ export function ArtistEditDialog({ artist, open, onOpenChange, onSave, isLoading
     instagram: artist.instagram || "",
     twitter: artist.twitter || "",
     website: artist.website || "",
+    image_url: artist.image_url,
+    cover_image_url: artist.cover_image_url || "",
+    audio_url: artist.audio_url || "",
+    audio_title: artist.audio_title || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -97,6 +102,41 @@ export function ArtistEditDialog({ artist, open, onOpenChange, onSave, isLoading
               onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
             />
           </div>
+
+          <FileUpload
+            bucket="artists"
+            currentUrl={formData.image_url}
+            onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+            accept="image/*"
+            label="Profile Image *"
+          />
+
+          <FileUpload
+            bucket="artists"
+            currentUrl={formData.cover_image_url}
+            onUploadComplete={(url) => setFormData({ ...formData, cover_image_url: url })}
+            accept="image/*"
+            label="Cover Image"
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="audio_title">Audio Title</Label>
+              <Input
+                id="audio_title"
+                value={formData.audio_title}
+                onChange={(e) => setFormData({ ...formData, audio_title: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <FileUpload
+            bucket="artists"
+            currentUrl={formData.audio_url}
+            onUploadComplete={(url) => setFormData({ ...formData, audio_url: url })}
+            accept="audio/*"
+            label="Audio File"
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>

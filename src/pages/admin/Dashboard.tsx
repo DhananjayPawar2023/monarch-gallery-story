@@ -1,10 +1,13 @@
 import { Navigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Users, Image, BookOpen, LogOut } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PlusCircle, Users, Image, BookOpen, LogOut, TrendingUp } from "lucide-react";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const AdminDashboard = () => {
   const { isAdmin, loading, signOut } = useAuth();
+  const { data: analytics } = useAnalytics();
 
   if (loading) {
     return (
@@ -67,7 +70,50 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Total Artists</CardTitle>
+              <Users className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics?.totalArtists || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">Active artists in gallery</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Total Artworks</CardTitle>
+              <Image className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics?.totalArtworks || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">Pieces in collection</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Collections</CardTitle>
+              <BookOpen className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics?.totalCollections || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">Curated exhibitions</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Journal Entries</CardTitle>
+              <TrendingUp className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics?.totalJournalEntries || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">Published articles</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {adminSections.map((section) => {
             const Icon = section.icon;
             return (
@@ -92,7 +138,7 @@ const AdminDashboard = () => {
           })}
         </div>
 
-        <div className="mt-12 p-6 bg-secondary/20 border border-border rounded-lg">
+        <div className="mt-8 p-6 bg-secondary/20 border border-border rounded-lg">
           <h3 className="font-display text-xl mb-4">Quick Actions</h3>
           <div className="flex flex-wrap gap-4">
             <Button asChild>

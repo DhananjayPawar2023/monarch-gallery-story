@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useAllJournalEntries, useCreateJournalEntry, useUpdateJournalEntry, useDeleteJournalEntry } from "@/hooks/useJournal";
 import { Pencil, Trash2, Plus } from "lucide-react";
+import { FileUpload } from "@/components/admin/FileUpload";
 
 const JournalManager = () => {
   const { isAdmin, loading, user } = useAuth();
@@ -30,6 +31,7 @@ const JournalManager = () => {
     read_time: "",
     status: "draft" as "draft" | "published",
     featured: false,
+    cover_image_url: "",
   });
 
   if (loading) {
@@ -88,6 +90,7 @@ const JournalManager = () => {
       read_time: entry.read_time,
       status: entry.status,
       featured: entry.featured,
+      cover_image_url: entry.cover_image_url || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -123,6 +126,7 @@ const JournalManager = () => {
       read_time: "",
       status: "draft",
       featured: false,
+      cover_image_url: "",
     });
   };
 
@@ -266,6 +270,16 @@ const JournalManager = () => {
                 className="w-4 h-4"
               />
               <Label htmlFor="featured">Featured Entry</Label>
+            </div>
+
+            <div className="md:col-span-2">
+              <FileUpload
+                bucket="artworks"
+                currentUrl={formData.cover_image_url}
+                onUploadComplete={(url) => handleChange("cover_image_url", url)}
+                accept="image/*"
+                label="Cover Image"
+              />
             </div>
           </div>
 

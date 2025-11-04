@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
+import { FileUpload } from "./FileUpload";
 
 interface ArtworkEditDialogProps {
   artwork: Artwork;
@@ -39,6 +40,10 @@ export function ArtworkEditDialog({
     edition: artwork.edition,
     price: artwork.price || "",
     featured: artwork.featured,
+    image_url: artwork.image_url,
+    video_url: artwork.video_url || "",
+    audio_url: artwork.audio_url || "",
+    audio_title: artwork.audio_title || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -167,6 +172,41 @@ export function ArtworkEditDialog({
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
             />
           </div>
+
+          <FileUpload
+            bucket="artworks"
+            currentUrl={formData.image_url}
+            onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+            accept="image/*"
+            label="Artwork Image *"
+          />
+
+          <div>
+            <Label htmlFor="video_url">Video URL</Label>
+            <Input
+              id="video_url"
+              value={formData.video_url}
+              onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+              placeholder="https://..."
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="audio_title">Audio Title</Label>
+            <Input
+              id="audio_title"
+              value={formData.audio_title}
+              onChange={(e) => setFormData({ ...formData, audio_title: e.target.value })}
+            />
+          </div>
+
+          <FileUpload
+            bucket="artworks"
+            currentUrl={formData.audio_url}
+            onUploadComplete={(url) => setFormData({ ...formData, audio_url: url })}
+            accept="audio/*"
+            label="Audio File"
+          />
 
           <div className="flex items-center space-x-2">
             <Checkbox
