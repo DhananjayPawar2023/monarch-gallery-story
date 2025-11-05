@@ -31,9 +31,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-      <div className="container mx-auto px-4 md:px-6 py-3">
-        <div className="flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border/40 transition-shadow shadow-sm">
+      <div className="container mx-auto px-4 md:px-6 py-4">
+        <div className="flex items-center justify-between gap-8">
           <Link to="/" className="flex items-center gap-2 group">
             <img 
               src={logo} 
@@ -45,15 +45,15 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2 md:gap-6">
-            <div className="flex items-center gap-2 md:gap-5">
+          <div className="flex items-center gap-4 md:gap-8">
+            <div className="flex items-center gap-4 md:gap-7">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    "text-xs md:text-sm font-body tracking-wide transition-colors relative px-1",
-                    "after:content-[''] after:absolute after:w-full after:h-[1px] after:bottom-[-4px] after:left-0 after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300",
+                    "text-xs md:text-sm font-body tracking-wide transition-all duration-300 relative py-1",
+                    "after:content-[''] after:absolute after:w-full after:h-[1px] after:bottom-0 after:left-0 after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out",
                     location.pathname === link.path
                       ? "text-foreground after:scale-x-100"
                       : "text-muted-foreground hover:text-foreground hover:after:scale-x-100"

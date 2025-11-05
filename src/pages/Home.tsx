@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 import heroBackground from "@/assets/hero-bg.jpg";
 import { useCollections } from "@/hooks/useCollections";
 import { useArtworks } from "@/hooks/useArtworks";
 import { useArtists } from "@/hooks/useArtists";
 import { SEO } from "@/components/SEO";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import {
   Carousel,
   CarouselContent,
@@ -25,10 +27,11 @@ const Home = () => {
   return (
     <>
       <SEO />
+      <ScrollToTop />
       <div className="min-h-screen">
         {/* Hero Section */}
         <section 
-          className="relative h-screen flex items-center justify-center overflow-hidden" 
+          className="relative h-screen flex items-center justify-center overflow-hidden gradient-bg gradient-bg-animated" 
           aria-label="Hero banner"
         >
         <div
@@ -37,38 +40,41 @@ const Home = () => {
             backgroundImage: `url(${heroBackground})`,
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
         </div>
 
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-          <h1 className="font-display text-6xl md:text-8xl mb-8 animate-fade-in-up">
+          <h1 className="font-display text-6xl md:text-8xl lg:text-9xl mb-6 md:mb-8 animate-fade-in-up leading-[1.1] tracking-tight">
             Where Art Meets Story
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 animate-fade-in-up max-w-3xl mx-auto leading-relaxed" style={{ animationDelay: "0.1s" }}>
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-10 md:mb-12 animate-fade-in-up max-w-3xl mx-auto leading-relaxed font-light" style={{ animationDelay: "0.15s" }}>
             Monarch bridges the gap between digital artistry and human emotion—curating works that transcend pixels and speak to something deeper
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up w-full max-w-md mx-auto sm:max-w-none" style={{ animationDelay: "0.2s" }}>
-            <Button size="lg" asChild className="w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up w-full max-w-md mx-auto sm:max-w-none mb-16" style={{ animationDelay: "0.3s" }}>
+            <Button size="lg" asChild className="w-full sm:w-auto text-base">
               <Link to="/collections">View Collection</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
+            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto text-base">
               <Link to="/artists">Meet the Artists</Link>
             </Button>
+          </div>
+          <div className="animate-fade-in-up animate-scroll-bounce" style={{ animationDelay: "0.5s" }}>
+            <ChevronDown className="w-6 h-6 mx-auto text-muted-foreground" />
           </div>
         </div>
       </section>
 
       {/* Now Showing Section */}
       {currentCollection && (
-        <section className="container mx-auto px-6 py-24">
-          <div className="mb-12">
-            <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
+        <section className="container mx-auto px-6 py-20 md:py-32">
+          <div className="mb-16 scroll-reveal">
+            <div className="inline-block px-4 py-1.5 bg-accent/10 text-accent text-xs uppercase tracking-widest mb-6 rounded-sm">
               Now Showing
             </div>
-            <h2 className="font-display text-5xl md:text-6xl mb-6">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-[1.15]">
               {currentCollection.name}
             </h2>
-            <p className="text-muted-foreground text-lg max-w-3xl leading-relaxed">
+            <p className="text-muted-foreground text-base md:text-lg max-w-3xl leading-relaxed">
               {currentCollection.description}
             </p>
           </div>
@@ -114,12 +120,12 @@ const Home = () => {
 
       {/* Artist Spotlight */}
       {spotlightArtist && (
-        <section className="container mx-auto px-6 py-24 bg-secondary/20">
-          <div className="mb-12">
-            <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
+        <section className="container mx-auto px-6 py-20 md:py-32 bg-secondary/20">
+          <div className="mb-16 scroll-reveal">
+            <div className="inline-block px-4 py-1.5 bg-accent/10 text-accent text-xs uppercase tracking-widest mb-6 rounded-sm">
               Artist Spotlight
             </div>
-            <h2 className="font-display text-5xl md:text-6xl mb-6">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-[1.15]">
               {spotlightArtist.name}
             </h2>
           </div>
@@ -196,12 +202,12 @@ const Home = () => {
       )}
 
       {/* Discover More */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-display text-5xl md:text-6xl mb-8">
+      <section className="container mx-auto px-6 py-20 md:py-32">
+        <div className="max-w-4xl mx-auto text-center scroll-reveal">
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mb-8 tracking-tight leading-[1.15]">
             Discover the Collection
           </h2>
-          <p className="text-muted-foreground text-lg mb-12 leading-relaxed">
+          <p className="text-muted-foreground text-base md:text-lg mb-12 leading-relaxed max-w-2xl mx-auto">
             Each piece in our gallery tells a story—of vision, process, and the quiet moments where art is born. 
             Explore our curated collection and find the work that speaks to you.
           </p>

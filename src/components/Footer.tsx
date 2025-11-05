@@ -71,7 +71,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-border">
           <p className="text-xs text-muted-foreground text-center">
-            © {new Date().getFullYear()} Monarch. All rights reserved.
+            © {new Date().getFullYear()} Monarch — Where Art Meets Story. All rights reserved.
           </p>
         </div>
       </div>
