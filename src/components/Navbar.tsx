@@ -31,29 +31,29 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border/40 transition-shadow shadow-sm">
-      <div className="container mx-auto px-4 md:px-6 py-4">
-        <div className="flex items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-2 group">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40 transition-all duration-300">
+      <div className="container mx-auto px-6 py-5">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3 group">
             <img 
               src={logo} 
-              alt="Monarch" 
-              className="h-8 w-8 object-contain transition-transform group-hover:scale-105"
+              alt="Monarch Gallery" 
+              className="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="font-display text-lg md:text-xl tracking-tight group-hover:text-accent transition-colors">
+            <span className="font-display text-xl tracking-tight group-hover:text-accent transition-colors duration-300">
               Monarch
             </span>
           </Link>
 
-          <div className="flex items-center gap-4 md:gap-8">
-            <div className="flex items-center gap-4 md:gap-7">
+          <div className="flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    "text-xs md:text-sm font-body tracking-wide transition-all duration-300 relative py-1",
-                    "after:content-[''] after:absolute after:w-full after:h-[1px] after:bottom-0 after:left-0 after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out",
+                    "text-sm font-body tracking-wide transition-all duration-300 relative py-1",
+                    "after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out",
                     location.pathname === link.path
                       ? "text-foreground after:scale-x-100"
                       : "text-muted-foreground hover:text-foreground hover:after:scale-x-100"

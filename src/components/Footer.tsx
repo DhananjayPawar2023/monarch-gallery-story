@@ -3,35 +3,40 @@ import { Instagram, Twitter, Youtube } from "lucide-react";
 const Footer = () => {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="container mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-12">
           <div>
-            <h3 className="font-display text-xl mb-4">Monarch</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Bridging artists and collectors through meaningful digital art.
+            <h3 className="font-display text-2xl mb-5">Monarch</h3>
+            <p className="text-sm text-muted-foreground leading-[1.7]">
+              Bridging digital artistry and human emotion through curated exhibitions and thoughtful storytelling.
             </p>
           </div>
 
           <div>
-            <h4 className="font-body font-semibold text-sm uppercase tracking-wider mb-4">Explore</h4>
-            <ul className="space-y-2">
+            <h4 className="font-body font-semibold text-sm uppercase tracking-[0.15em] mb-5">Explore</h4>
+            <ul className="space-y-3">
               <li>
-                <a href="/collections" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/collections" className="text-sm text-muted-foreground hover:text-accent transition-colors duration-300">
                   Collections
                 </a>
               </li>
               <li>
-                <a href="/artists" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/artists" className="text-sm text-muted-foreground hover:text-accent transition-colors duration-300">
                   Artists
                 </a>
               </li>
               <li>
-                <a href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/journal" className="text-sm text-muted-foreground hover:text-accent transition-colors duration-300">
+                  Journal
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="text-sm text-muted-foreground hover:text-accent transition-colors duration-300">
                   About
                 </a>
               </li>
               <li>
-                <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/contact" className="text-sm text-muted-foreground hover:text-accent transition-colors duration-300">
                   Contact
                 </a>
               </li>
@@ -39,13 +44,14 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-body font-semibold text-sm uppercase tracking-wider mb-4">Follow</h4>
-            <div className="flex gap-4">
+            <h4 className="font-body font-semibold text-sm uppercase tracking-[0.15em] mb-5">Follow</h4>
+            <div className="flex gap-5">
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors"
+                aria-label="Follow us on Instagram"
+                className="text-muted-foreground hover:text-accent transition-all duration-300 hover:scale-110"
               >
                 <Instagram className="w-5 h-5" />
               </a>
@@ -53,7 +59,8 @@ const Footer = () => {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors"
+                aria-label="Follow us on Twitter"
+                className="text-muted-foreground hover:text-accent transition-all duration-300 hover:scale-110"
               >
                 <Twitter className="w-5 h-5" />
               </a>
@@ -61,7 +68,8 @@ const Footer = () => {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors"
+                aria-label="Subscribe on YouTube"
+                className="text-muted-foreground hover:text-accent transition-all duration-300 hover:scale-110"
               >
                 <Youtube className="w-5 h-5" />
               </a>
@@ -69,9 +77,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border">
-          <p className="text-xs text-muted-foreground text-center">
-            © {new Date().getFullYear()} Monarch — Where Art Meets Story. All rights reserved.
+        <div className="mt-16 pt-10 border-t border-border">
+          <p className="text-xs text-muted-foreground text-center tracking-wide">
+            © {new Date().getFullYear()} Monarch Gallery — Where Art Meets Story. All rights reserved.
           </p>
         </div>
       </div>
