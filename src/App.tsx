@@ -23,6 +23,12 @@ import ArtistsManager from "./pages/admin/ArtistsManager";
 import ArtworksManager from "./pages/admin/ArtworksManager";
 import CollectionsManager from "./pages/admin/CollectionsManager";
 import JournalManager from "./pages/admin/JournalManager";
+import Interviews from "./pages/Interviews";
+import InterviewDetail from "./pages/InterviewDetail";
+import Collectors from "./pages/Collectors";
+import Exhibitions from "./pages/Exhibitions";
+import ExhibitionDetail from "./pages/ExhibitionDetail";
+import Compare from "./pages/Compare";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +69,12 @@ const App = () => {
                 <Route path="/artists/:id" element={<ArtistDetail />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/journal/:slug" element={<JournalDetail />} />
+                <Route path="/interviews" element={<Interviews />} />
+                <Route path="/interviews/:slug" element={<InterviewDetail />} />
+                <Route path="/collectors" element={<Collectors />} />
+                <Route path="/exhibitions" element={<Exhibitions />} />
+                <Route path="/exhibitions/:slug" element={<ExhibitionDetail />} />
+                <Route path="/compare" element={<Compare />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />

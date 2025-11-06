@@ -14,6 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
+      artist_interviews: {
+        Row: {
+          artist_id: string
+          audio_title: string | null
+          audio_url: string | null
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          created_by: string
+          excerpt: string
+          featured: boolean
+          id: string
+          interview_date: string
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          artist_id: string
+          audio_title?: string | null
+          audio_url?: string | null
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by: string
+          excerpt: string
+          featured?: boolean
+          id?: string
+          interview_date?: string
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          artist_id?: string
+          audio_title?: string | null
+          audio_url?: string | null
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string
+          excerpt?: string
+          featured?: boolean
+          id?: string
+          interview_date?: string
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_interviews_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artists: {
         Row: {
           audio_title: string | null
@@ -200,6 +265,135 @@ export type Database = {
         }
         Relationships: []
       }
+      collectors: {
+        Row: {
+          bio: string
+          collection_focus: string | null
+          created_at: string
+          created_by: string
+          featured: boolean
+          id: string
+          image_url: string
+          instagram: string | null
+          location: string | null
+          name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          bio: string
+          collection_focus?: string | null
+          created_at?: string
+          created_by: string
+          featured?: boolean
+          id?: string
+          image_url: string
+          instagram?: string | null
+          location?: string | null
+          name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          bio?: string
+          collection_focus?: string | null
+          created_at?: string
+          created_by?: string
+          featured?: boolean
+          id?: string
+          image_url?: string
+          instagram?: string | null
+          location?: string | null
+          name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      exhibition_artworks: {
+        Row: {
+          artwork_id: string
+          display_order: number | null
+          exhibition_id: string
+          id: string
+        }
+        Insert: {
+          artwork_id: string
+          display_order?: number | null
+          exhibition_id: string
+          id?: string
+        }
+        Update: {
+          artwork_id?: string
+          display_order?: number | null
+          exhibition_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exhibition_artworks_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exhibition_artworks_exhibition_id_fkey"
+            columns: ["exhibition_id"]
+            isOneToOne: false
+            referencedRelation: "exhibitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exhibitions: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string
+          curator_statement: string
+          description: string
+          end_date: string
+          featured: boolean
+          id: string
+          slug: string
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by: string
+          curator_statement: string
+          description: string
+          end_date: string
+          featured?: boolean
+          id?: string
+          slug: string
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string
+          curator_statement?: string
+          description?: string
+          end_date?: string
+          featured?: boolean
+          id?: string
+          slug?: string
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       journal_entries: {
         Row: {
           author: string
@@ -251,6 +445,33 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          email: string
+          id: string
+          name: string | null
+          preferences: Json | null
+          status: string
+          subscribed_at: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          name?: string | null
+          preferences?: Json | null
+          status?: string
+          subscribed_at?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          name?: string | null
+          preferences?: Json | null
+          status?: string
+          subscribed_at?: string
         }
         Relationships: []
       }
