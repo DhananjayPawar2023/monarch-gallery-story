@@ -3,18 +3,22 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/monarch-logo.jpeg";
-import { Settings, User } from "lucide-react";
+import { Settings, User, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { WalletConnect } from "./WalletConnect";
+import { useState } from "react";
 
 const Navbar = () => {
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { name: "Explore", path: "/" },
     { name: "Collections", path: "/collections" },
     { name: "Artists", path: "/artists" },
+    { name: "Interviews", path: "/interviews" },
+    { name: "Exhibitions", path: "/exhibitions" },
     { name: "Journal", path: "/journal" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
@@ -85,8 +89,64 @@ const Navbar = () => {
                 </Button>
               )}
             </div>
+
+            {/* Mobile Menu Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg">
+            <div className="container mx-auto px-6 py-6 space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "block py-2 text-base transition-colors",
+                    location.pathname === link.path
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div className="pt-4 border-t border-border space-y-3">
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <WalletConnect />
+                </div>
+                {user ? (
+                  <>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                        <User className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                    <Button onClick={() => { signOut(); setMobileMenuOpen(false); }} variant="outline" className="w-full">
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <Button asChild className="w-full">
+                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
