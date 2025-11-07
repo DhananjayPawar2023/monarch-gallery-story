@@ -139,6 +139,27 @@ export type Database = {
         }
         Relationships: []
       }
+      artwork_views: {
+        Row: {
+          artwork_id: string
+          id: string
+          user_id: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          artwork_id: string
+          id?: string
+          user_id?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          artwork_id?: string
+          id?: string
+          user_id?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: []
+      }
       artworks: {
         Row: {
           artist_id: string
@@ -394,6 +415,27 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          artwork_id: string
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          artwork_id: string
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          artwork_id?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       journal_entries: {
         Row: {
           author: string
@@ -472,6 +514,147 @@ export type Database = {
           preferences?: Json | null
           status?: string
           subscribed_at?: string
+        }
+        Relationships: []
+      }
+      nft_metadata: {
+        Row: {
+          artwork_id: string
+          blockchain: string | null
+          contract_address: string | null
+          created_at: string | null
+          id: string
+          metadata_uri: string | null
+          mint_transaction: string | null
+          minted_at: string | null
+          token_id: string | null
+        }
+        Insert: {
+          artwork_id: string
+          blockchain?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          id?: string
+          metadata_uri?: string | null
+          mint_transaction?: string | null
+          minted_at?: string | null
+          token_id?: string | null
+        }
+        Update: {
+          artwork_id?: string
+          blockchain?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          id?: string
+          metadata_uri?: string | null
+          mint_transaction?: string | null
+          minted_at?: string | null
+          token_id?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          link: string | null
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      price_alerts: {
+        Row: {
+          artwork_id: string
+          created_at: string | null
+          id: string
+          target_price: number | null
+          user_id: string
+        }
+        Insert: {
+          artwork_id: string
+          created_at?: string | null
+          id?: string
+          target_price?: number | null
+          user_id: string
+        }
+        Update: {
+          artwork_id?: string
+          created_at?: string | null
+          id?: string
+          target_price?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
+          email_notifications: boolean | null
+          id: string
+          instagram: string | null
+          role: string
+          twitter: string | null
+          updated_at: string | null
+          user_id: string
+          wallet_address: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          instagram?: string | null
+          role?: string
+          twitter?: string | null
+          updated_at?: string | null
+          user_id: string
+          wallet_address?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          instagram?: string | null
+          role?: string
+          twitter?: string | null
+          updated_at?: string | null
+          user_id?: string
+          wallet_address?: string | null
+          website?: string | null
         }
         Relationships: []
       }

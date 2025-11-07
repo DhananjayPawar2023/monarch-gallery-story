@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { WalletProvider } from "./contexts/WalletContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -29,6 +31,8 @@ import Collectors from "./pages/Collectors";
 import Exhibitions from "./pages/Exhibitions";
 import ExhibitionDetail from "./pages/ExhibitionDetail";
 import Compare from "./pages/Compare";
+import Dashboard from "./pages/Dashboard";
+import ProfileEdit from "./pages/ProfileEdit";
 
 const queryClient = new QueryClient();
 
@@ -57,7 +61,9 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AuthProvider>
+          <ThemeProvider>
+            <WalletProvider>
+              <AuthProvider>
             <div className="flex flex-col min-h-screen">
               <Navbar />
               <main className="flex-grow">
@@ -75,6 +81,8 @@ const App = () => {
                 <Route path="/exhibitions" element={<Exhibitions />} />
                 <Route path="/exhibitions/:slug" element={<ExhibitionDetail />} />
                 <Route path="/compare" element={<Compare />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />
@@ -88,7 +96,9 @@ const App = () => {
               </main>
               <Footer />
             </div>
-          </AuthProvider>
+              </AuthProvider>
+            </WalletProvider>
+          </ThemeProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

@@ -5,6 +5,10 @@ import { useArtworks } from "@/hooks/useArtworks";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -16,9 +20,19 @@ import {
 const ArtworkDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { data: artwork, isLoading: artworkLoading } = useArtwork(id || "");
   const { data: artist } = useArtist(artwork?.artist_id || "");
   const { data: allArtworks } = useArtworks();
+
+  useEffect(() => {
+    if (artwork?.id) {
+      supabase.from("artwork_views").insert({
+        artwork_id: artwork.id,
+        user_id: user?.id || null,
+      });
+    }
+  }, [artwork?.id, user?.id]);
 
   if (artworkLoading) {
     return (
@@ -109,6 +123,7 @@ const ArtworkDetail = () => {
             </p>
 
             <div className="flex gap-4">
+              <FavoriteButton artworkId={artwork.id} variant="default" />
               <Button size="lg">
                 Collect
               </Button>

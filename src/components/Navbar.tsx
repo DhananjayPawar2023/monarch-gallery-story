@@ -3,23 +3,13 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/monarch-logo.jpeg";
-import { LogIn, Settings, Moon, Sun } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Settings, User } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
+import { WalletConnect } from "./WalletConnect";
 
 const Navbar = () => {
   const location = useLocation();
-  const { user, isAdmin } = useAuth();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, []);
-
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-    setIsDark(!isDark);
-  };
+  const { user, isAdmin, signOut } = useAuth();
 
   const navLinks = [
     { name: "Explore", path: "/" },
@@ -64,19 +54,9 @@ const Navbar = () => {
               ))}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={toggleDarkMode}
-                className="h-8 w-8 p-0"
-              >
-                {isDark ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-              </Button>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <WalletConnect />
               
               {isAdmin && (
                 <Button size="sm" variant="outline" asChild>
@@ -87,12 +67,21 @@ const Navbar = () => {
                 </Button>
               )}
               
-              {!user && (
-                <Button size="sm" asChild>
-                  <Link to="/auth">
-                    <LogIn className="w-3 h-3 sm:mr-2" />
-                    <span className="hidden sm:inline">Sign In</span>
-                  </Link>
+              {user ? (
+                <>
+                  <Button asChild variant="ghost" size="sm">
+                    <Link to="/dashboard">
+                      <User className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Dashboard</span>
+                    </Link>
+                  </Button>
+                  <Button onClick={signOut} variant="outline" size="sm">
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Button asChild size="sm">
+                  <Link to="/auth">Sign In</Link>
                 </Button>
               )}
             </div>
