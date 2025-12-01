@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Collections from "./pages/Collections";
+import CollectionDetail from "./pages/CollectionDetail";
 import Artists from "./pages/Artists";
 import ArtistDetail from "./pages/ArtistDetail";
 import Journal from "./pages/Journal";
@@ -70,6 +71,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/collections" element={<Collections />} />
+                <Route path="/collections/:id" element={<CollectionDetail />} />
                 <Route path="/artwork/:id" element={<ArtworkDetail />} />
                 <Route path="/artists" element={<Artists />} />
                 <Route path="/artists/:id" element={<ArtistDetail />} />
