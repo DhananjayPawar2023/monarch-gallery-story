@@ -1,39 +1,39 @@
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { useArtworks } from "@/hooks/useArtworks";
+import { useCollections } from "@/hooks/useCollections";
 import { SEO } from "@/components/SEO";
 import { SearchFilter } from "@/components/SearchFilter";
 import { ArtworkSkeleton } from "@/components/LoadingSkeleton";
 
 const Collections = () => {
-  const { data: artworks, isLoading } = useArtworks();
+  const { data: collections, isLoading } = useCollections();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
 
   const sortOptions = [
     { value: "newest", label: "Newest First" },
     { value: "oldest", label: "Oldest First" },
-    { value: "title", label: "Title A-Z" },
+    { value: "name", label: "Name A-Z" },
   ];
 
-  const filteredAndSortedArtworks = useMemo(() => {
-    if (!artworks) return [];
+  const filteredAndSortedCollections = useMemo(() => {
+    if (!collections) return [];
     
-    let filtered = artworks.filter((artwork) =>
-      artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
+    let filtered = collections.filter((collection) =>
+      collection.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      collection.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     switch (sortBy) {
       case "oldest":
-        return filtered.sort((a, b) => a.year - b.year);
-      case "title":
-        return filtered.sort((a, b) => a.title.localeCompare(b.title));
+        return filtered.sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
+      case "name":
+        return filtered.sort((a, b) => a.name.localeCompare(b.name));
       case "newest":
       default:
-        return filtered.sort((a, b) => b.year - a.year);
+        return filtered.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
     }
-  }, [artworks, searchTerm, sortBy]);
+  }, [collections, searchTerm, sortBy]);
 
   return (
     <>
@@ -67,38 +67,37 @@ const Collections = () => {
                 <ArtworkSkeleton key={i} />
               ))}
             </div>
-          ) : filteredAndSortedArtworks.length === 0 ? (
+          ) : filteredAndSortedCollections.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg">
-                {searchTerm ? "No artworks match your search." : "No artworks available yet."}
+                {searchTerm ? "No collections match your search." : "No collections available yet."}
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {filteredAndSortedArtworks.map((artwork, index) => (
+              {filteredAndSortedCollections.map((collection, index) => (
               <Link
-                key={artwork.id}
-                to={`/artwork/${artwork.id}`}
+                key={collection.id}
+                to={`/collections/${collection.id}`}
                 className="group hover-lift animate-fade-in-up block"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="aspect-square bg-secondary mb-6 overflow-hidden rounded-lg">
-                  <img
-                    src={artwork.image_url}
-                    alt={`${artwork.title} - Digital artwork`}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                <div className="aspect-[4/3] bg-secondary mb-6 overflow-hidden rounded-lg">
+                  {collection.cover_image_url && (
+                    <img
+                      src={collection.cover_image_url}
+                      alt={`${collection.name} - Art collection`}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  )}
                 </div>
                 <div>
                   <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
-                    {artwork.title}
+                    {collection.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {artwork.year} • Edition of {artwork.edition}
-                  </p>
                   <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">
-                    {artwork.description}
+                    {collection.description}
                   </p>
                 </div>
               </Link>

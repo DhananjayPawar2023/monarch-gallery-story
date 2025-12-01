@@ -4,6 +4,8 @@ import { useArtworks } from "@/hooks/useArtworks";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Instagram, Twitter, Globe } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
+import { FollowArtist } from "@/components/FollowArtist";
+import { SocialShare } from "@/components/SocialShare";
 
 const ArtistDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -85,7 +87,13 @@ const ArtistDetail = () => {
               </blockquote>
             )}
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
+              <FollowArtist artistId={artist.id} artistName={artist.name} />
+              <SocialShare 
+                url={window.location.href}
+                title={`${artist.name} - Artist Profile`}
+                description={artist.short_bio || artist.bio}
+              />
               {artist.instagram && (
                 <Button variant="outline" size="sm" asChild>
                   <a href={artist.instagram} target="_blank" rel="noopener noreferrer">
