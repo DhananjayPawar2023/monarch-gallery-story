@@ -4,11 +4,15 @@ import { useCollections } from "@/hooks/useCollections";
 import { SEO } from "@/components/SEO";
 import { SearchFilter } from "@/components/SearchFilter";
 import { ArtworkSkeleton } from "@/components/LoadingSkeleton";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Pagination } from "@/components/Pagination";
 
 const Collections = () => {
   const { data: collections, isLoading } = useCollections();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   const sortOptions = [
     { value: "newest", label: "Newest First" },
@@ -35,6 +39,12 @@ const Collections = () => {
     }
   }, [collections, searchTerm, sortBy]);
 
+  const totalPages = Math.ceil(filteredAndSortedCollections.length / itemsPerPage);
+  const paginatedCollections = filteredAndSortedCollections.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <>
       <SEO 
@@ -43,6 +53,7 @@ const Collections = () => {
       />
       <main className="min-h-screen pt-24 px-6 pb-16">
         <div className="container mx-auto">
+          <Breadcrumb />
           <header className="mb-12">
             <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
               Collections
@@ -74,8 +85,9 @@ const Collections = () => {
               </p>
             </div>
           ) : (
+            <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {filteredAndSortedCollections.map((collection, index) => (
+              {paginatedCollections.map((collection, index) => (
               <Link
                 key={collection.id}
                 to={`/collections/${collection.id}`}
@@ -103,6 +115,12 @@ const Collections = () => {
               </Link>
               ))}
             </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+            </>
           )}
         </div>
       </main>
