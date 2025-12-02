@@ -7,6 +7,7 @@ import { useArtworks } from "@/hooks/useArtworks";
 import { useArtists } from "@/hooks/useArtists";
 import { SEO } from "@/components/SEO";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { RecommendedArtworks } from "@/components/RecommendedArtworks";
 import {
   Carousel,
   CarouselContent,
@@ -205,6 +206,9 @@ const Home = () => {
           </div>
         </section>
       )}
+
+      {/* Recommendations */}
+      <RecommendedArtworks />
 
       {/* Discover More */}
       <section className="container mx-auto px-6 py-24 md:py-36">

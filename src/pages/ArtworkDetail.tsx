@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { AddToCollection } from "@/components/AddToCollection";
+import { SocialShare } from "@/components/SocialShare";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
@@ -61,12 +64,13 @@ const ArtworkDetail = () => {
 
   return (
     <div className="min-h-screen pt-24">
-      {/* Back Button */}
+      {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-6 mb-8">
+        <Breadcrumb />
         <Button
           onClick={() => navigate(-1)}
           variant="ghost"
-          className="group"
+          className="group mt-4"
         >
           <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           Back
@@ -122,14 +126,23 @@ const ArtworkDetail = () => {
               {artwork.description}
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               <FavoriteButton artworkId={artwork.id} variant="default" />
-              <Button size="lg">
-                Collect
-              </Button>
-              <Button size="lg" variant="outline">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                View on Marketplace
+              <AddToCollection artworkId={artwork.id} />
+              <SocialShare
+                url={window.location.href}
+                title={artwork.title}
+                description={artwork.description}
+              />
+              <Button size="lg" variant="outline" asChild>
+                <a
+                  href={`https://transient.xyz`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  View on Marketplace
+                </a>
               </Button>
             </div>
           </div>

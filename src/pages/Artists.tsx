@@ -4,11 +4,15 @@ import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { SearchFilter } from "@/components/SearchFilter";
 import { ArtistSkeleton } from "@/components/LoadingSkeleton";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Pagination } from "@/components/Pagination";
 
 const Artists = () => {
   const { data: artists, isLoading } = useArtists();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const sortOptions = [
     { value: "name", label: "Name A-Z" },
@@ -33,6 +37,12 @@ const Artists = () => {
     }
   }, [artists, searchTerm, sortBy]);
 
+  const totalPages = Math.ceil(filteredAndSortedArtists.length / itemsPerPage);
+  const paginatedArtists = filteredAndSortedArtists.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <>
       <SEO 
@@ -41,6 +51,7 @@ const Artists = () => {
       />
       <main className="min-h-screen pt-24 px-6 pb-16">
         <div className="container mx-auto">
+          <Breadcrumb />
           <header className="mb-12">
             <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
               Artists
@@ -73,8 +84,9 @@ const Artists = () => {
               </p>
             </div>
           ) : (
+            <>
             <section className="space-y-24">
-              {filteredAndSortedArtists.map((artist, index) => (
+              {paginatedArtists.map((artist, index) => (
             <Link
               key={artist.id}
               to={`/artists/${artist.id}`}
@@ -126,6 +138,12 @@ const Artists = () => {
               </Link>
               ))}
             </section>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+            </>
           )}
         </div>
       </main>
