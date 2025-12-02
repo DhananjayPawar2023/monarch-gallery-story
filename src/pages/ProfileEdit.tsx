@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 
 const ProfileEdit = () => {
@@ -20,10 +19,8 @@ const ProfileEdit = () => {
   const [formData, setFormData] = useState({
     display_name: "",
     bio: "",
-    role: "collector",
+    location: "",
     website: "",
-    instagram: "",
-    twitter: "",
   });
 
   useEffect(() => {
@@ -31,10 +28,8 @@ const ProfileEdit = () => {
       setFormData({
         display_name: profile.display_name || "",
         bio: profile.bio || "",
-        role: profile.role || "collector",
+        location: profile.location || "",
         website: profile.website || "",
-        instagram: profile.instagram || "",
-        twitter: profile.twitter || "",
       });
     }
   }, [profile]);
@@ -86,23 +81,6 @@ const ProfileEdit = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="role">Role</Label>
-                  <Select
-                    value={formData.role}
-                    onValueChange={(value) => setFormData({ ...formData, role: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="collector">Collector</SelectItem>
-                      <SelectItem value="artist">Artist</SelectItem>
-                      <SelectItem value="gallery">Gallery</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
                   <Label htmlFor="bio">Bio</Label>
                   <Textarea
                     id="bio"
@@ -114,32 +92,22 @@ const ProfileEdit = () => {
                 </div>
 
                 <div>
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="New York, NY"
+                  />
+                </div>
+
+                <div>
                   <Label htmlFor="website">Website</Label>
                   <Input
                     id="website"
                     value={formData.website}
                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                     placeholder="https://yourwebsite.com"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="instagram">Instagram</Label>
-                  <Input
-                    id="instagram"
-                    value={formData.instagram}
-                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
-                    placeholder="@username"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="twitter">Twitter/X</Label>
-                  <Input
-                    id="twitter"
-                    value={formData.twitter}
-                    onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-                    placeholder="@username"
                   />
                 </div>
 

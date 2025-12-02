@@ -14,6 +14,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      artist_follows: {
+        Row: {
+          artist_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_follows_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artist_interviews: {
         Row: {
           artist_id: string
@@ -24,7 +53,7 @@ export type Database = {
           created_at: string
           created_by: string
           excerpt: string
-          featured: boolean
+          featured: boolean | null
           id: string
           interview_date: string
           slug: string
@@ -42,7 +71,7 @@ export type Database = {
           created_at?: string
           created_by: string
           excerpt: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           interview_date?: string
           slug: string
@@ -60,7 +89,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           excerpt?: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           interview_date?: string
           slug?: string
@@ -139,26 +168,69 @@ export type Database = {
         }
         Relationships: []
       }
+      artwork_recommendations: {
+        Row: {
+          artwork_id: string
+          created_at: string
+          id: string
+          reason: string | null
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          artwork_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          artwork_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artwork_recommendations_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artwork_views: {
         Row: {
           artwork_id: string
           id: string
           user_id: string | null
-          viewed_at: string | null
+          viewed_at: string
         }
         Insert: {
           artwork_id: string
           id?: string
           user_id?: string | null
-          viewed_at?: string | null
+          viewed_at?: string
         }
         Update: {
           artwork_id?: string
           id?: string
           user_id?: string | null
-          viewed_at?: string | null
+          viewed_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "artwork_views_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       artworks: {
         Row: {
@@ -171,7 +243,7 @@ export type Database = {
           description: string
           dimensions: string | null
           edition: string
-          featured: boolean
+          featured: boolean | null
           id: string
           image_url: string
           medium: string
@@ -192,7 +264,7 @@ export type Database = {
           description: string
           dimensions?: string | null
           edition: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           image_url: string
           medium: string
@@ -213,7 +285,7 @@ export type Database = {
           description?: string
           dimensions?: string | null
           edition?: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           image_url?: string
           medium?: string
@@ -237,6 +309,42 @@ export type Database = {
             columns: ["collection_id"]
             isOneToOne: false
             referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_artworks: {
+        Row: {
+          added_at: string
+          artwork_id: string
+          collection_id: string
+          id: string
+        }
+        Insert: {
+          added_at?: string
+          artwork_id: string
+          collection_id: string
+          id?: string
+        }
+        Update: {
+          added_at?: string
+          artwork_id?: string
+          collection_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_artworks_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_artworks_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "user_collections"
             referencedColumns: ["id"]
           },
         ]
@@ -292,7 +400,7 @@ export type Database = {
           collection_focus: string | null
           created_at: string
           created_by: string
-          featured: boolean
+          featured: boolean | null
           id: string
           image_url: string
           instagram: string | null
@@ -306,7 +414,7 @@ export type Database = {
           collection_focus?: string | null
           created_at?: string
           created_by: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           image_url: string
           instagram?: string | null
@@ -320,7 +428,7 @@ export type Database = {
           collection_focus?: string | null
           created_at?: string
           created_by?: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           image_url?: string
           instagram?: string | null
@@ -375,7 +483,7 @@ export type Database = {
           curator_statement: string
           description: string
           end_date: string
-          featured: boolean
+          featured: boolean | null
           id: string
           slug: string
           start_date: string
@@ -390,7 +498,7 @@ export type Database = {
           curator_statement: string
           description: string
           end_date: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           slug: string
           start_date: string
@@ -405,7 +513,7 @@ export type Database = {
           curator_statement?: string
           description?: string
           end_date?: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           slug?: string
           start_date?: string
@@ -418,23 +526,31 @@ export type Database = {
       favorites: {
         Row: {
           artwork_id: string
-          created_at: string | null
+          created_at: string
           id: string
           user_id: string
         }
         Insert: {
           artwork_id: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           user_id: string
         }
         Update: {
           artwork_id?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "favorites_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       journal_entries: {
         Row: {
@@ -445,7 +561,7 @@ export type Database = {
           created_at: string
           created_by: string
           excerpt: string
-          featured: boolean
+          featured: boolean | null
           id: string
           published_date: string
           read_time: string
@@ -462,7 +578,7 @@ export type Database = {
           created_at?: string
           created_by: string
           excerpt: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           published_date?: string
           read_time: string
@@ -479,7 +595,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           excerpt?: string
-          featured?: boolean
+          featured?: boolean | null
           id?: string
           published_date?: string
           read_time?: string
@@ -522,7 +638,7 @@ export type Database = {
           artwork_id: string
           blockchain: string | null
           contract_address: string | null
-          created_at: string | null
+          created_at: string
           id: string
           metadata_uri: string | null
           mint_transaction: string | null
@@ -533,7 +649,7 @@ export type Database = {
           artwork_id: string
           blockchain?: string | null
           contract_address?: string | null
-          created_at?: string | null
+          created_at?: string
           id?: string
           metadata_uri?: string | null
           mint_transaction?: string | null
@@ -544,18 +660,26 @@ export type Database = {
           artwork_id?: string
           blockchain?: string | null
           contract_address?: string | null
-          created_at?: string | null
+          created_at?: string
           id?: string
           metadata_uri?: string | null
           mint_transaction?: string | null
           minted_at?: string | null
           token_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "nft_metadata_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
           link: string | null
           message: string
@@ -565,7 +689,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           link?: string | null
           message: string
@@ -575,7 +699,7 @@ export type Database = {
           user_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           link?: string | null
           message?: string
@@ -589,92 +713,135 @@ export type Database = {
       price_alerts: {
         Row: {
           artwork_id: string
-          created_at: string | null
+          created_at: string
           id: string
           target_price: number | null
           user_id: string
         }
         Insert: {
           artwork_id: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           target_price?: number | null
           user_id: string
         }
         Update: {
           artwork_id?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           target_price?: number | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "price_alerts_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           avatar_url: string | null
           bio: string | null
-          created_at: string | null
+          created_at: string
           display_name: string | null
-          email_notifications: boolean | null
           id: string
-          instagram: string | null
-          role: string
-          twitter: string | null
-          updated_at: string | null
+          location: string | null
+          preferences: Json | null
+          updated_at: string
           user_id: string
-          wallet_address: string | null
           website: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
-          created_at?: string | null
+          created_at?: string
           display_name?: string | null
-          email_notifications?: boolean | null
           id?: string
-          instagram?: string | null
-          role?: string
-          twitter?: string | null
-          updated_at?: string | null
+          location?: string | null
+          preferences?: Json | null
+          updated_at?: string
           user_id: string
-          wallet_address?: string | null
           website?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
-          created_at?: string | null
+          created_at?: string
           display_name?: string | null
-          email_notifications?: boolean | null
           id?: string
-          instagram?: string | null
-          role?: string
-          twitter?: string | null
-          updated_at?: string | null
+          location?: string | null
+          preferences?: Json | null
+          updated_at?: string
           user_id?: string
-          wallet_address?: string | null
           website?: string | null
         }
         Relationships: []
       }
-      user_roles: {
+      social_shares: {
         Row: {
+          artwork_id: string
           created_at: string
           id: string
-          role: Database["public"]["Enums"]["app_role"]
+          platform: string
+          share_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          artwork_id: string
+          created_at?: string
+          id?: string
+          platform: string
+          share_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          artwork_id?: string
+          created_at?: string
+          id?: string
+          platform?: string
+          share_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_shares_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_collections: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean | null
+          name: string
+          updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
-          role: Database["public"]["Enums"]["app_role"]
+          is_public?: boolean | null
+          name: string
+          updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          is_public?: boolean | null
+          name?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -684,16 +851,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -820,8 +981,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user"],
-    },
+    Enums: {},
   },
 } as const

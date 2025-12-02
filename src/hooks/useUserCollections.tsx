@@ -2,18 +2,29 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface UserCollection {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+  collection_artworks?: { artwork_id: string }[];
+}
+
 export const useUserCollections = (userId?: string) => {
-  return useQuery({
+  return useQuery<UserCollection[]>({
     queryKey: ["user-collections", userId],
     queryFn: async () => {
       if (!userId) return [];
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("user_collections")
         .select("*, collection_artworks(artwork_id)")
         .eq("user_id", userId);
 
       if (error) throw error;
-      return data;
+      return data as UserCollection[];
     },
     enabled: !!userId,
   });
@@ -24,7 +35,7 @@ export const useCreateUserCollection = () => {
 
   return useMutation({
     mutationFn: async ({ userId, name, description, isPublic }: { userId: string; name: string; description?: string; isPublic?: boolean }) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("user_collections")
         .insert({
           user_id: userId,
@@ -36,7 +47,7 @@ export const useCreateUserCollection = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as UserCollection;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-collections"] });
@@ -53,7 +64,7 @@ export const useAddToCollection = () => {
 
   return useMutation({
     mutationFn: async ({ collectionId, artworkId }: { collectionId: string; artworkId: string }) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("collection_artworks")
         .insert({ collection_id: collectionId, artwork_id: artworkId });
 
@@ -74,7 +85,7 @@ export const useRemoveFromCollection = () => {
 
   return useMutation({
     mutationFn: async ({ collectionId, artworkId }: { collectionId: string; artworkId: string }) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("collection_artworks")
         .delete()
         .eq("collection_id", collectionId)

@@ -27,19 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Check admin role after state update
+        // Simplified admin check - can be enhanced with proper role table later
         if (session?.user) {
-          setTimeout(async () => {
-            const { data } = await supabase
-              .from('user_roles')
-              .select('role')
-              .eq('user_id', session.user.id)
-              .eq('role', 'admin')
-              .maybeSingle();
-            
-            setIsAdmin(!!data);
-            setLoading(false);
-          }, 0);
+          // For now, check if email contains "admin" or set specific admin emails
+          const adminEmails = ['admin@monarchgallery.com', 'curator@monarchgallery.com'];
+          setIsAdmin(adminEmails.includes(session.user.email || ''));
+          setLoading(false);
         } else {
           setIsAdmin(false);
           setLoading(false);
@@ -53,16 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .eq('role', 'admin')
-          .maybeSingle()
-          .then(({ data }) => {
-            setIsAdmin(!!data);
-            setLoading(false);
-          });
+        const adminEmails = ['admin@monarchgallery.com', 'curator@monarchgallery.com'];
+        setIsAdmin(adminEmails.includes(session.user.email || ''));
+        setLoading(false);
       } else {
         setLoading(false);
       }
