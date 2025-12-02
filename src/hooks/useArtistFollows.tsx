@@ -2,29 +2,36 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface ArtistFollow {
+  id: string;
+  user_id: string;
+  artist_id: string;
+  created_at: string;
+}
+
 export const useArtistFollows = (userId?: string) => {
-  return useQuery({
+  return useQuery<ArtistFollow[]>({
     queryKey: ["artist-follows", userId],
     queryFn: async () => {
       if (!userId) return [];
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("artist_follows")
         .select("*")
         .eq("user_id", userId);
 
       if (error) throw error;
-      return data;
+      return data as ArtistFollow[];
     },
     enabled: !!userId,
   });
 };
 
 export const useIsFollowing = (userId?: string, artistId?: string) => {
-  return useQuery({
+  return useQuery<boolean>({
     queryKey: ["is-following", userId, artistId],
     queryFn: async () => {
       if (!userId || !artistId) return false;
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("artist_follows")
         .select("id")
         .eq("user_id", userId)
@@ -44,7 +51,7 @@ export const useToggleFollow = () => {
   return useMutation({
     mutationFn: async ({ userId, artistId, isFollowing }: { userId: string; artistId: string; isFollowing: boolean }) => {
       if (isFollowing) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("artist_follows")
           .delete()
           .eq("user_id", userId)
@@ -52,7 +59,7 @@ export const useToggleFollow = () => {
 
         if (error) throw error;
       } else {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("artist_follows")
           .insert({ user_id: userId, artist_id: artistId });
 

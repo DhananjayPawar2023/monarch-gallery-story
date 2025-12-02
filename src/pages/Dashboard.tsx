@@ -63,11 +63,11 @@ const Dashboard = () => {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Role</CardTitle>
+                <CardTitle className="text-sm font-medium">Profile</CardTitle>
                 <User className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <Badge>{profile?.role || "collector"}</Badge>
+                <Badge>Member</Badge>
               </CardContent>
             </Card>
           </div>
@@ -166,8 +166,8 @@ const Dashboard = () => {
                     <p className="font-medium">{user.email}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Role</p>
-                    <Badge>{profile?.role || "collector"}</Badge>
+                    <p className="text-sm text-muted-foreground">Location</p>
+                    <p className="font-medium">{profile?.location || "Not set"}</p>
                   </div>
                   {profile?.bio && (
                     <div>
