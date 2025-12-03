@@ -14,6 +14,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Check admin role from database
+async function checkAdminRole(userId: string): Promise<boolean> {
+  try {
+    const { data, error } = await (supabase as any)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error checking admin role:', error);
+      return false;
+    }
+    
+    return !!data;
+  } catch (err) {
+    console.error('Error checking admin role:', err);
+    return false;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -27,11 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Simplified admin check - can be enhanced with proper role table later
         if (session?.user) {
-          // For now, check if email contains "admin" or set specific admin emails
-          const adminEmails = ['admin@monarchgallery.com', 'curator@monarchgallery.com'];
-          setIsAdmin(adminEmails.includes(session.user.email || ''));
+          // Query the user_roles table to check admin status
+          const adminStatus = await checkAdminRole(session.user.id);
+          setIsAdmin(adminStatus);
           setLoading(false);
         } else {
           setIsAdmin(false);
@@ -41,13 +62,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        const adminEmails = ['admin@monarchgallery.com', 'curator@monarchgallery.com'];
-        setIsAdmin(adminEmails.includes(session.user.email || ''));
+        const adminStatus = await checkAdminRole(session.user.id);
+        setIsAdmin(adminStatus);
         setLoading(false);
       } else {
         setLoading(false);
