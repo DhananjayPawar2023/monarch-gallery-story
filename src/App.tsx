@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { WalletProvider } from "./contexts/WalletContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -63,43 +62,41 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ThemeProvider>
-            <WalletProvider>
-              <AuthProvider>
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/collections" element={<Collections />} />
-                <Route path="/collections/:id" element={<CollectionDetail />} />
-                <Route path="/artwork/:id" element={<ArtworkDetail />} />
-                <Route path="/artists" element={<Artists />} />
-                <Route path="/artists/:id" element={<ArtistDetail />} />
-                <Route path="/journal" element={<Journal />} />
-                <Route path="/journal/:slug" element={<JournalDetail />} />
-                <Route path="/interviews" element={<Interviews />} />
-                <Route path="/interviews/:slug" element={<InterviewDetail />} />
-                <Route path="/collectors" element={<Collectors />} />
-                <Route path="/exhibitions" element={<Exhibitions />} />
-                <Route path="/exhibitions/:slug" element={<ExhibitionDetail />} />
-                <Route path="/compare" element={<Compare />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile/edit" element={<ProfileEdit />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/artists" element={<ArtistsManager />} />
-                <Route path="/admin/artworks" element={<ArtworksManager />} />
-                <Route path="/admin/collections" element={<CollectionsManager />} />
-                <Route path="/admin/journal" element={<JournalManager />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              </main>
-              <Footer />
-            </div>
-              </AuthProvider>
-            </WalletProvider>
+            <AuthProvider>
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/collections/:id" element={<CollectionDetail />} />
+                    <Route path="/artwork/:id" element={<ArtworkDetail />} />
+                    <Route path="/artists" element={<Artists />} />
+                    <Route path="/artists/:id" element={<ArtistDetail />} />
+                    <Route path="/journal" element={<Journal />} />
+                    <Route path="/journal/:slug" element={<JournalDetail />} />
+                    <Route path="/interviews" element={<Interviews />} />
+                    <Route path="/interviews/:slug" element={<InterviewDetail />} />
+                    <Route path="/collectors" element={<Collectors />} />
+                    <Route path="/exhibitions" element={<Exhibitions />} />
+                    <Route path="/exhibitions/:slug" element={<ExhibitionDetail />} />
+                    <Route path="/compare" element={<Compare />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile/edit" element={<ProfileEdit />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/artists" element={<ArtistsManager />} />
+                    <Route path="/admin/artworks" element={<ArtworksManager />} />
+                    <Route path="/admin/collections" element={<CollectionsManager />} />
+                    <Route path="/admin/journal" element={<JournalManager />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </AuthProvider>
           </ThemeProvider>
         </BrowserRouter>
       </TooltipProvider>
