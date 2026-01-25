@@ -1,16 +1,29 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import logo from "@/assets/monarch-logo.jpeg";
-import { Settings, User, Menu, X } from "lucide-react";
+import { Settings, User, Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useState } from "react";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAdmin, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/collections?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false);
+    }
+  };
 
   const navLinks = [
     { name: "Explore", path: "/" },
@@ -60,6 +73,39 @@ const Navbar = () => {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-3">
+            {/* Search */}
+            {searchOpen ? (
+              <form onSubmit={handleSearch} className="relative hidden sm:flex">
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-48 h-8 text-sm pr-8"
+                  autoFocus
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-8 w-8"
+                  onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </form>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:flex h-8 w-8"
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+              >
+                <Search className="h-4 w-4" />
+              </Button>
+            )}
+            
             <ThemeToggle />
             
             {isAdmin && (
