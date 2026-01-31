@@ -9,6 +9,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { AddToCollection } from "@/components/AddToCollection";
 import { SocialShare } from "@/components/SocialShare";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { SEO, generateArtworkStructuredData } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
@@ -62,7 +63,23 @@ const ArtworkDetail = () => {
     (a) => a.artist_id === artwork.artist_id && a.id !== artwork.id
   ) || [];
 
+  const artworkStructuredData = artwork && artist ? generateArtworkStructuredData({
+    title: artwork.title,
+    description: artwork.description,
+    image_url: artwork.image_url,
+    artist_name: artist.name,
+    created_at: String(artwork.year),
+  }) : undefined;
+
   return (
+    <>
+      <SEO 
+        title={artwork ? `${artwork.title} by ${artist?.name || "Unknown Artist"}` : "Artwork"}
+        description={artwork?.description?.slice(0, 155) || "Discover this exceptional digital artwork at Monarch Gallery."}
+        image={artwork?.image_url}
+        keywords={["digital art", artwork?.medium || "", artist?.name || "", "limited edition", "art collection"]}
+        structuredData={artworkStructuredData}
+      />
     <div className="min-h-screen pt-24">
       {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-6 mb-8">
@@ -238,6 +255,7 @@ const ArtworkDetail = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
