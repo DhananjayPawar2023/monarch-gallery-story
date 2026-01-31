@@ -48,6 +48,7 @@ const Artists = () => {
       <SEO 
         title="Featured Artists - Digital Art Pioneers"
         description="Meet the visionary artists at Monarch - storytellers, pioneers, and digital art creators bridging technology and emotion through exceptional artworks."
+        keywords={["digital artists", "contemporary artists", "art pioneers", "visual artists", "creative professionals"]}
       />
       <main className="min-h-screen pt-24 px-6 pb-16">
         <div className="container mx-auto">

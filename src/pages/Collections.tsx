@@ -50,6 +50,7 @@ const Collections = () => {
       <SEO 
         title="Art Collections - Curated Digital Artworks"
         description="Explore our curated collection of limited-edition digital artworks from renowned artists. Each piece tells a unique story bridging traditional fine art and contemporary digital creation."
+        keywords={["digital art collections", "curated artworks", "limited edition art", "contemporary digital art", "art exhibitions"]}
       />
       <main className="min-h-screen pt-24 px-6 pb-16">
         <div className="container mx-auto">
