@@ -53,6 +53,7 @@ function AnimatedRoutes() {
           <Route path="/collections" element={<PageTransition><Collections /></PageTransition>} />
           <Route path="/collections/:id" element={<PageTransition><CollectionDetail /></PageTransition>} />
           <Route path="/artwork/:id" element={<PageTransition><ArtworkDetail /></PageTransition>} />
+          <Route path="/artworks/:id" element={<PageTransition><ArtworkDetail /></PageTransition>} />
           <Route path="/artists" element={<PageTransition><Artists /></PageTransition>} />
           <Route path="/artists/:id" element={<PageTransition><ArtistDetail /></PageTransition>} />
           <Route path="/journal" element={<PageTransition><Journal /></PageTransition>} />
