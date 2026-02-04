@@ -13,6 +13,7 @@ import { RecommendedArtworks } from "@/components/RecommendedArtworks";
 import { ArtworkCard } from "@/components/home/ArtworkCard";
 import { CarouselArtworkCard } from "@/components/home/CarouselArtworkCard";
 import { HomePageSkeleton } from "@/components/home/HomeSkeleton";
+import { FeaturedMint } from "@/components/home/FeaturedMint";
 import {
   Carousel,
   CarouselContent,
@@ -88,18 +89,22 @@ const Home = () => {
               </motion.span>
             </motion.h1>
             <motion.p 
-              className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed font-light"
+              className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               Monarch bridges digital artistry and human emotion—curating works that transcend pixels and speak to something deeper
             </motion.p>
+
+            {/* Featured Mint Section */}
+            <FeaturedMint />
+
             <motion.div 
               className="flex flex-col sm:flex-row gap-4 justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <Button 
                 size="lg" 
