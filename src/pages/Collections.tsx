@@ -6,6 +6,12 @@ import { SearchFilter } from "@/components/SearchFilter";
 import { ArtworkSkeleton } from "@/components/LoadingSkeleton";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { Pagination } from "@/components/Pagination";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Separator } from "@/components/ui/separator";
+import { Calendar, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
 
 const Collections = () => {
   const { data: collections, isLoading } = useCollections();
@@ -56,6 +62,9 @@ const Collections = () => {
         <div className="container mx-auto">
           <Breadcrumb />
           <header className="mb-12">
+            <Badge variant="outline" className="mb-4 text-xs uppercase tracking-wider">
+              Curated Exhibitions
+            </Badge>
             <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
               Collections
             </h1>
@@ -74,53 +83,74 @@ const Collections = () => {
           />
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, i) => (
                 <ArtworkSkeleton key={i} />
               ))}
             </div>
           ) : filteredAndSortedCollections.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">
-                {searchTerm ? "No collections match your search." : "No collections available yet."}
-              </p>
-            </div>
+            <Card className="text-center py-12">
+              <CardContent>
+                <p className="text-muted-foreground text-lg">
+                  {searchTerm ? "No collections match your search." : "No collections available yet."}
+                </p>
+              </CardContent>
+            </Card>
           ) : (
             <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {paginatedCollections.map((collection, index) => (
-              <Link
-                key={collection.id}
-                to={`/collections/${collection.id}`}
-                className="group hover-lift animate-fade-in-up block"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-[4/3] bg-secondary mb-6 overflow-hidden rounded-lg">
-                  {collection.cover_image_url && (
-                    <img
-                      src={collection.cover_image_url}
-                      alt={`${collection.name} - Art collection`}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div>
-                  <h3 className="font-display text-2xl mb-2 group-hover:text-accent transition-colors">
-                    {collection.name}
-                  </h3>
-                  <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">
-                    {collection.description}
-                  </p>
-                </div>
-              </Link>
-              ))}
-            </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {paginatedCollections.map((collection, index) => (
+                  <Link
+                    key={collection.id}
+                    to={`/collections/${collection.id}`}
+                    className="group animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <Card className="h-full overflow-hidden border-border/50 hover:border-accent/50 hover:shadow-lg transition-all duration-300">
+                      <CardHeader className="p-0">
+                        <AspectRatio ratio={4/3} className="bg-secondary overflow-hidden">
+                          {collection.cover_image_url ? (
+                            <img
+                              src={collection.cover_image_url}
+                              alt={`${collection.name} - Art collection`}
+                              loading="lazy"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-secondary">
+                              <span className="text-muted-foreground">No image</span>
+                            </div>
+                          )}
+                        </AspectRatio>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                          <Calendar className="w-3 h-3" />
+                          <span>{format(new Date(collection.release_date), "MMMM yyyy")}</span>
+                        </div>
+                        <h3 className="font-display text-2xl mb-3 group-hover:text-accent transition-colors leading-tight">
+                          {collection.name}
+                        </h3>
+                        <p className="text-sm text-foreground/70 leading-relaxed line-clamp-3">
+                          {collection.description}
+                        </p>
+                      </CardContent>
+                      <Separator />
+                      <CardFooter className="p-4">
+                        <span className="text-sm text-accent flex items-center gap-2 group-hover:gap-3 transition-all">
+                          View Collection
+                          <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </CardFooter>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </>
           )}
         </div>
