@@ -4,11 +4,19 @@ import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { SearchFilter } from "@/components/SearchFilter";
 import { JournalSkeleton } from "@/components/LoadingSkeleton";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { BookOpen, Calendar, Clock, ArrowRight, Mail, User } from "lucide-react";
 
 const Journal = () => {
   const { data: journalEntries, isLoading } = useJournalEntries();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [email, setEmail] = useState("");
 
   const sortOptions = [
     { value: "newest", label: "Newest First" },
@@ -33,6 +41,9 @@ const Journal = () => {
     }
   }, [journalEntries, searchTerm, sortBy]);
 
+  const featuredEntry = filteredAndSortedEntries.find((entry) => entry.featured);
+  const otherEntries = filteredAndSortedEntries.filter((entry) => !entry.featured);
+
   return (
     <>
       <SEO 
@@ -40,12 +51,16 @@ const Journal = () => {
         description="Essays, conversations, and reflections on the intersection of art, technology, and meaning. Deeper thinking about what digital creation can become."
       />
       <main className="min-h-screen pt-24 px-6 pb-16">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-5xl">
           <header className="mb-12">
+            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
+              <BookOpen className="w-3 h-3 mr-1" />
+              Essays & Reflections
+            </Badge>
             <h1 className="font-display text-5xl md:text-7xl mb-6 animate-fade-in-up">
               Journal
             </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <p className="text-muted-foreground text-lg leading-relaxed animate-fade-in-up max-w-3xl" style={{ animationDelay: "0.1s" }}>
               Essays, conversations, and reflections on the intersection of art, technology, and meaning. 
               A space for deeper thinking about what digital creation can become.
             </p>
@@ -66,65 +81,135 @@ const Journal = () => {
               ))}
             </div>
           ) : filteredAndSortedEntries.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">
-                {searchTerm ? "No journal entries match your search." : "No journal entries available yet."}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-12">
-              {filteredAndSortedEntries.map((entry, index) => (
-              <article
-                key={entry.id}
-                className="border-b border-border pb-12 last:border-0 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="inline-block px-4 py-1 bg-accent/10 text-accent text-xs uppercase tracking-wider mb-4">
-                  {entry.category}
-                </div>
-                <Link to={`/journal/${entry.slug}`} className="group">
-                  <h2 className="font-display text-3xl md:text-4xl mb-4 group-hover:text-accent transition-colors">
-                    {entry.title}
-                  </h2>
-                </Link>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                  <span>{entry.author}</span>
-                  <span>•</span>
-                  <span>{new Date(entry.published_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  <span>•</span>
-                  <span>{entry.read_time}</span>
-                </div>
-                <p className="text-foreground/80 leading-relaxed text-lg mb-6">
-                  {entry.excerpt}
+            <Card className="text-center py-16">
+              <CardContent>
+                <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground text-lg mb-2">
+                  {searchTerm ? "No journal entries match your search." : "No journal entries yet"}
                 </p>
-                <Link
-                  to={`/journal/${entry.slug}`}
-                  className="text-accent hover:underline"
-                >
-                  Read More →
+                <p className="text-sm text-muted-foreground">
+                  Check back soon for essays and reflections.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Featured Entry */}
+              {featuredEntry && (
+                <Link to={`/journal/${featuredEntry.slug}`} className="group block mb-12">
+                  <Card className="overflow-hidden border-border/50 hover:border-accent/50 transition-all duration-300">
+                    <div className="grid grid-cols-1 lg:grid-cols-2">
+                      {featuredEntry.cover_image_url && (
+                        <div className="aspect-[16/10] lg:aspect-auto bg-secondary overflow-hidden">
+                          <img
+                            src={featuredEntry.cover_image_url}
+                            alt={featuredEntry.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        </div>
+                      )}
+                      <CardContent className="p-8 md:p-10 flex flex-col justify-center">
+                        <Badge className="w-fit mb-4 bg-accent/10 text-accent border-accent/20">
+                          {featuredEntry.category}
+                        </Badge>
+                        <h2 className="font-display text-2xl md:text-3xl lg:text-4xl mb-4 group-hover:text-accent transition-colors leading-tight">
+                          {featuredEntry.title}
+                        </h2>
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                          <span className="flex items-center gap-1">
+                            <User className="w-3 h-3" />
+                            {featuredEntry.author}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {new Date(featuredEntry.published_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {featuredEntry.read_time}
+                          </span>
+                        </div>
+                        <Separator className="my-4" />
+                        <p className="text-foreground/80 leading-relaxed mb-6">
+                          {featuredEntry.excerpt}
+                        </p>
+                        <span className="text-accent flex items-center gap-2 font-medium group-hover:gap-3 transition-all">
+                          Read Article <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </CardContent>
+                    </div>
+                  </Card>
                 </Link>
-              </article>
-              ))}
-            </div>
+              )}
+
+              {/* Other Entries */}
+              <div className="space-y-8">
+                {otherEntries.map((entry, index) => (
+                  <Link
+                    key={entry.id}
+                    to={`/journal/${entry.slug}`}
+                    className="group block animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <Card className="overflow-hidden border-border/50 hover:border-accent/50 hover:shadow-lg transition-all duration-300">
+                      <div className="grid grid-cols-1 md:grid-cols-[250px,1fr] gap-0">
+                        {entry.cover_image_url && (
+                          <div className="aspect-video md:aspect-square bg-secondary overflow-hidden">
+                            <img
+                              src={entry.cover_image_url}
+                              alt={entry.title}
+                              loading="lazy"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                        )}
+                        <CardContent className="p-6 flex flex-col justify-center">
+                          <Badge variant="outline" className="w-fit mb-3 text-xs">
+                            {entry.category}
+                          </Badge>
+                          <h2 className="font-display text-xl md:text-2xl mb-3 group-hover:text-accent transition-colors leading-tight">
+                            {entry.title}
+                          </h2>
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
+                            <span>{entry.author}</span>
+                            <span>•</span>
+                            <span>{new Date(entry.published_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            <span>•</span>
+                            <span>{entry.read_time}</span>
+                          </div>
+                          <p className="text-foreground/70 leading-relaxed text-sm line-clamp-2">
+                            {entry.excerpt}
+                          </p>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </>
           )}
 
-          <aside className="mt-16 p-8 bg-secondary/30 border border-border rounded-lg text-center">
-            <h3 className="font-display text-2xl mb-4">Stay Connected</h3>
-            <p className="text-muted-foreground mb-6">
-              Receive occasional insights, artist features, and collection announcements.
-            </p>
-            <div className="flex gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Your email address"
-                aria-label="Email address"
-                className="flex-1 px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
-              />
-              <button className="px-6 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors">
-                Subscribe
-              </button>
-            </div>
-          </aside>
+          {/* Newsletter CTA */}
+          <Card className="mt-16 bg-secondary/30 border-border/50">
+            <CardContent className="py-10 px-8 text-center">
+              <Mail className="w-10 h-10 mx-auto mb-4 text-accent" />
+              <h3 className="font-display text-2xl mb-3">Stay Connected</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Receive occasional insights, artist features, and collection announcements.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <Input
+                  type="email"
+                  placeholder="Your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1"
+                />
+                <Button>Subscribe</Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </>
