@@ -113,13 +113,14 @@ const Contact = () => {
                 {/* Temporary email fallback */}
                 <Button 
                   size="lg" 
+                  variant="outline"
+                  className="gap-2"
                   asChild
-                  className="group"
                 >
                   <a href="mailto:hello@monarch-gallery.com?subject=Inquiry from Website">
-                    <Mail className="w-4 h-4 mr-2" />
+                    <Mail className="w-4 h-4" />
                     Email Us Directly
-                    <ExternalLink className="w-3 h-3 ml-2 opacity-50" />
+                    <ExternalLink className="w-3 h-3 opacity-50" />
                   </a>
                 </Button>
               </div>
