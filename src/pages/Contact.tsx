@@ -87,7 +87,7 @@ const Contact = () => {
               </p>
             </CardHeader>
             <Separator />
-            <CardContent className="p-8">
+            <CardContent className="p-8 space-y-8">
               {/* 
                 INTEGRATION PLACEHOLDER:
                 Replace this div with your Google Forms or Typeform embed code.
@@ -99,18 +99,19 @@ const Contact = () => {
                 <div data-tf-live="YOUR_TYPEFORM_ID"></div>
                 <script src="//embed.typeform.com/next/embed.js"></script>
               */}
-              <div className="bg-secondary/30 border-2 border-dashed border-border rounded-lg p-10 text-center">
-                <Badge variant="secondary" className="mb-4">
+              <div className="bg-secondary/30 border-2 border-dashed border-border rounded-lg p-10 text-center space-y-3">
+                <Badge variant="secondary">
                   Coming Soon
                 </Badge>
-                <p className="text-muted-foreground text-sm mb-2">
+                <p className="text-muted-foreground text-sm">
                   Form embed placeholder
                 </p>
-                <p className="text-xs text-muted-foreground/70 mb-6">
+                <p className="text-xs text-muted-foreground/70">
                   Google Forms or Typeform will be embedded here
                 </p>
-                
-                {/* Temporary email fallback */}
+              </div>
+
+              <div className="flex justify-center">
                 <Button 
                   size="lg" 
                   variant="outline"
@@ -125,7 +126,7 @@ const Contact = () => {
                 </Button>
               </div>
 
-              <Separator className="my-8" />
+              <Separator />
 
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <Clock className="w-4 h-4" />
